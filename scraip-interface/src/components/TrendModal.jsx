@@ -45,9 +45,6 @@ function TrendModal({ onNewTrend }) {
       websites,
     };
 
-    console.log(newTrend);
-
-    console.log(onNewTrend);
     onNewTrend(newTrend);
 
     setBrowserQuery("");
