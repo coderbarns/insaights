@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from src.crud.document import create_input_documents
+from src.crud.query import create_query
 from src.deps import get_db
 from src.schemas import document as schemas
 from src.services import embeddings
@@ -28,6 +29,7 @@ async def search(
     params: schemas.DocumentSearchRequest,
     db: Session = Depends(get_db),
 ) -> schemas.DocumentSearchResponse:
+    create_query(db, params.query)
     results = embeddings.search(query=params.query, limit=2)
     document_search_results = get_document_search_results(db, results)
     return schemas.DocumentSearchResponse(results=document_search_results)

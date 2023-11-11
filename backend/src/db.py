@@ -73,5 +73,25 @@ class Trend(Base):
     scrape_interval = Column(String)
 
 
+class Query(Base):
+    __tablename__ = "queries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    text = Column(String)
+
+
+class DocumentQuery(Base):
+    __tablename__ = "documents__queries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey("documents.id"))
+    query_id = Column(Integer, ForeignKey("queries.id"))
+    relevance = Column(Float)
+    impact = Column(Float)
+
+    document = relationship("Document", backref="query_relationships")
+    query = relationship("Query", backref="document_relationships")
+
+
 if __name__ == "__main__":
     Base.metadata.create_all(bind=engine)
