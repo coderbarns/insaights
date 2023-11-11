@@ -4,7 +4,7 @@ from src.schemas import document as schemas
 from src import db as models
 
 
-def create_input_documents(db: Session, documents: list[schemas.InputDocument]):
+def create_input_documents(db: Session, documents: list[schemas.InsertDocument]):
     db_documents = [
         models.Document(
             text=document.text, source=document.source, source_type="insert"
