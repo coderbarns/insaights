@@ -7,7 +7,7 @@ class BaseDocument(BaseModel):
     text: str
 
 
-class InputDocument(BaseDocument):
+class InsertDocument(BaseDocument):
     pass
 
 
@@ -24,7 +24,7 @@ class Document(BaseDocument):
 
 
 class CreateDocumentsRequest(BaseModel):
-    documents: list[BaseDocument]
+    documents: list[InsertDocument]
 
     class Config:
         schema_extra = {
