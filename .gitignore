@@ -3,3 +3,4 @@ vectors
 .mypy_cache
 .idea
 venv
+.env
