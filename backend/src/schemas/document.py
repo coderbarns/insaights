@@ -23,6 +23,14 @@ class Document(BaseDocument):
     reliable: Optional[float]
 
 
+class DocumentSearchResult(BaseDocument):
+    id: int
+    source_type: str
+    link_title: Optional[str]
+    reliable: Optional[float]
+    score: float
+
+
 class CreateDocumentsRequest(BaseModel):
     source: str
     texts: list[str]
@@ -39,7 +47,7 @@ class CreateDocumentsResponse(BaseModel):
     message: str
 
 
-class SearchRequest(BaseModel):
+class DocumentSearchRequest(BaseModel):
     query: str
 
     class Config:
@@ -50,5 +58,5 @@ class SearchRequest(BaseModel):
         }
 
 
-class SearchResponse(BaseModel):
-    results: list[tuple[float, str]]
+class DocumentSearchResponse(BaseModel):
+    results: list[DocumentSearchResult]
