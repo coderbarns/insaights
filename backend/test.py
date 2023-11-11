@@ -3,13 +3,13 @@ from txtai.ann import Faiss
 
 base_url = "http://127.0.0.1:5000"
 
-# url = f"{base_url}/api/v1/embeddings/index/"
-# response = requests.post(url, json={"texts": ["I like cooking.", "I like steel manufacturing", "Steel manufacturing rocks!"]})
-# print(response.json())
+url = f"{base_url}/api/v1/documents/"
+response = requests.post(url, json={"source": "aarni", "texts": ["I like cooking.", "I like steel manufacturing", "Steel manufacturing rocks!"]})
+print(response.json())
 
-# url = f"{base_url}/api/v1/embeddings/search/"
-# response = requests.post(url, json={"query": "How much does steel manufacturing rock?"})
-# print(response.json())
+url = f"{base_url}/api/v1/documents/search/"
+response = requests.post(url, json={"query": "How much does steel manufacturing rock?"})
+print(response.json())
 
 
 # Faiss({

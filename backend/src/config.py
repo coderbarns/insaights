@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     ES_USER: str = ""
     ES_PASSWORD: str = ""
 
+    EMBEDDINGS_PATH: str = "embeddings"
+
     def get_pg_connection_uri(self):
         return f"{self.POSTGRES_SCHEME}://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
@@ -29,11 +31,6 @@ class Settings(BaseSettings):
         if self.ES_USER == "" or self.ES_PASSWORD == "":
             return f"{self.ES_SCHEME}://{self.ES_HOST}:{self.ES_PORT}"
         return f"{self.ES_SCHEME}://{self.ES_USER}:{self.ES_PASSWORD}@{self.ES_HOST}:{self.ES_PORT}"
-
-    def get_txtai_config(self):
-        return {
-            "content": self.get_pg_connection_uri(),
-        }
 
 
 settings = Settings()

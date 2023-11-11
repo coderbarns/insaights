@@ -1,30 +1,32 @@
 from fastapi import APIRouter, Depends
-from txtai import Embeddings
+from sqlalchemy.orm import Session
 
-from src.deps import get_embeddings
-from backend.src.schemas.document import (
+from src.deps import get_db
+from src.schemas.document import (
     CreateDocumentsRequest,
     CreateDocumentsResponse,
+    InsertDocument,
     SearchRequest,
     SearchResponse,
 )
+from src.crud.document import create_input_documents
+from src import embeddings
 
 router = APIRouter()
 
 
 @router.post("/")
 async def create_document(
-    params: CreateDocumentsRequest, embeddings: Embeddings = Depends(get_embeddings)
+    params: CreateDocumentsRequest,
+    db: Session = Depends(get_db),
 ) -> CreateDocumentsResponse:
-    embeddings.index(params.documents)
-    embeddings.save("elastic")
+    documents = [InsertDocument(source=params.source, text=text) for text in params.texts]
+    db_documents = create_input_documents(db, documents)
+    embeddings.upsert(db_documents)
     return CreateDocumentsResponse(message="Stored!")
 
 
 @router.post("/search/")
-async def search(
-    params: SearchRequest, embeddings: Embeddings = Depends(get_embeddings)
-) -> SearchResponse:
-    embeddings.load("elastic")
+async def search(params: SearchRequest) -> SearchResponse:
     results = embeddings.search(query=params.query, limit=2)
     return SearchResponse(results=results)
