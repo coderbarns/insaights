@@ -44,8 +44,8 @@ class DocumentPrompt(Base):
     relevance = Float()
     impact = Float()
 
-    prompt = relationship("Prompt", back_populates="prompt_rels")
-    document = relationship("Document", back_populates="document_rels")
+    prompt = relationship("Prompt", backref="document_relationships")
+    document = relationship("Document", backref="prompt_relationships")
 
 
 if __name__ == "__main__":

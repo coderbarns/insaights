@@ -4,3 +4,4 @@ elastic
 .idea
 venv
 .env
+embeddings

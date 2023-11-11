@@ -24,7 +24,8 @@ class Document(BaseDocument):
 
 
 class CreateDocumentsRequest(BaseModel):
-    documents: list[InsertDocument]
+    source: str
+    texts: list[str]
 
     class Config:
         schema_extra = {
