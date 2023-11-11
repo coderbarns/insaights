@@ -4,6 +4,9 @@ import {
   TileBelowTheFoldContent,
   Button,
   TextInput,
+  OrderedList,
+  ListItem,
+  Link,
 } from "@carbon/react";
 
 const TrendTile = ({ trendData }) => {
@@ -16,6 +19,7 @@ const TrendTile = ({ trendData }) => {
       }}
     >
       <ExpandableTile
+        style={{ width: "590px" }}
         onClick={() => console.log("click")}
         id="expandable-tile-1"
         tileCollapsedIconText="Interact to Expand tile"
@@ -24,11 +28,11 @@ const TrendTile = ({ trendData }) => {
         <TileAboveTheFoldContent>
           <div
             style={{
-              height: "200px",
-              width: "360px",
+              height: "300px",
+              width: "fit-content",
             }}
           >
-            <h5>{browserQuery}</h5>
+            <h3>{browserQuery}</h3>
             <div
               style={{
                 paddingTop: "1rem",
@@ -40,21 +44,31 @@ const TrendTile = ({ trendData }) => {
         <TileBelowTheFoldContent>
           <div
             style={{
-              height: "200px",
+              height: "300px",
               width: "360px",
             }}
           >
+            <h5>Relevant links</h5>
+            <OrderedList style={{ padding: "10px 10px 10px 30px" }}>
+              {websites.map((website, index) => (
+                <ListItem key={index}>
+                  <Link href={website}>{website}</Link>
+                </ListItem>
+              ))}
+            </OrderedList>
             <h4>summary</h4>
           </div>
           <div
             style={{
               display: "flex",
-              width: "65%",
+              width: "45%",
               justifyContent: "space-between",
             }}
           >
             <Button>Edit</Button>
-            <Button>Delete</Button>
+            <Button style={{ backgroundColor: "#D3D3D3", color: "black" }}>
+              Delete
+            </Button>
           </div>
         </TileBelowTheFoldContent>
       </ExpandableTile>

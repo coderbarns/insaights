@@ -31,9 +31,10 @@ const TrendsDashboard = () => {
         </div>
       </div>
       <div
+        className="responsive-grid"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)", // Creates two columns
+          gridTemplateColumns: "repeat(2, 1fr)", // Creates two columns
           gap: "20px", // Adjust the gap between tiles as needed
           justifyContent: "center", // Center the grid itself
           alignItems: "start", // Align items to the start of each cell
