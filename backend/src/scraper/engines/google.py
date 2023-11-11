@@ -3,7 +3,7 @@ from typing import List
 import requests
 import json
 
-from src.lib.engines._types import SearchEngine, SearchResult
+from src.scraper.types_ import SearchEngine, SearchResult, SearchEngineCutoff
 from src.config import settings
 
 URL = "https://www.googleapis.com/customsearch/v1"
@@ -19,6 +19,15 @@ class GoogleEngine(SearchEngine):
         self._date_restrict = date_restrict
         self._site = site
         self._verbose = verbose
+
+    def set_cutoff(self, value: SearchEngineCutoff):
+        cutoffs = {
+            SearchEngineCutoff.DAY: "d1",
+            SearchEngineCutoff.WEEK: "w1",
+            SearchEngineCutoff.MONTH: "m1",
+        }
+
+        self._date_restrict = cutoffs[value]
 
     def search(self, query: str, limit: int = 10) -> List[SearchResult]:
         results = []
@@ -54,7 +63,7 @@ class GoogleEngine(SearchEngine):
         response = requests.get(URL, params)
 
         if response.status_code != 200:
-            return []
+            return [], 0
 
         payload = response.content.decode("utf-8")
 
@@ -64,14 +73,18 @@ class GoogleEngine(SearchEngine):
         results = []
 
         data = json.loads(payload)
-        for item in data["items"]:
-            url = item["link"]
-            title = item["title"]
-            description = item["snippet"]
-            meta = item["pagemap"]["metatags"][0]
+        if "items" in data:
+            for item in data["items"]:
+                url = item["link"]
+                title = item["title"]
+                description = item["snippet"]
+                meta = None
 
-            result = SearchResult(url, title, description, meta)
-            results.append(result)
+                if "pagemap" in item:
+                    meta = item["pagemap"]["metatags"][0]
+
+                result = SearchResult(url, title, description, meta)
+                results.append(result)
 
         total = int(data["searchInformation"]["totalResults"])
 
