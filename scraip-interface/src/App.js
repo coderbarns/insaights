@@ -39,7 +39,7 @@ function App() {
             Insights
           </HeaderName>
         </div>
-        <div style={{ display: 'flex', width: '', justifyContent: 'space-around', }}>
+        <div style={{width: '100%'}}>
           {renderComponent()}
         </div>
       </div>

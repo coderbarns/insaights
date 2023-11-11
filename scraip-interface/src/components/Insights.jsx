@@ -1,9 +1,17 @@
-import CardModal from "./CardModal";
+import CardModal from "./TrendModal";
 import { Button, Header, HeaderName, Heading } from "@carbon/react";
 
 const Insights = () => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between", // Center the grid itself
+        alignItems: "start", // Align items to the start of each cell
+        maxWidth: "1260px", // Adjust based on the size of your tiles
+        margin: "auto",
+      }}
+    >
       <Heading> Insights </Heading>
       <div
         style={{

@@ -1,16 +1,52 @@
-import React from "react";
-import { Grid, Row, Column } from "@carbon/react";
-import { Button, Header, HeaderName, Heading } from "@carbon/react";
+import React, { useState } from "react";
+import TrendModal from "./TrendModal"; // Import your TrendModal
+import TrendTile from "./TrendTile"; // Import your TrendTile
 
-import CardModal from "./CardModal"; // Adjust the path as per your project structure
+import { Heading } from "@carbon/react";
 
-const Trends = () => {
+const TrendsDashboard = () => {
+  const [trends, setTrends] = useState([]); // Array to hold trend data
+
+  const handleNewTrend = (newTrend) => {
+    setTrends([...trends, newTrend]);
+  };
+
   return (
     <>
-      <Heading> Trends </Heading>
-      <CardModal />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between", // Center the grid itself
+          alignItems: "start", // Align items to the start of each cell
+          maxWidth: "1260px", // Adjust based on the size of your tiles
+          margin: "auto",
+          marginBottom: "40px",
+        }}
+      >
+        <div style={{}}>
+          <Heading>Trends</Heading>
+        </div>
+        <div>
+          <TrendModal onNewTrend={handleNewTrend} />
+        </div>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)", // Creates two columns
+          gap: "20px", // Adjust the gap between tiles as needed
+          justifyContent: "center", // Center the grid itself
+          alignItems: "start", // Align items to the start of each cell
+          maxWidth: "1200px", // Adjust based on the size of your tiles
+          margin: "auto", // Center the grid container
+        }}
+      >
+        {trends.map((trend, index) => (
+          <TrendTile key={index} trendData={trend} />
+        ))}
+      </div>
     </>
   );
 };
 
-export default Trends;
+export default TrendsDashboard;
