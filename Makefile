@@ -17,10 +17,13 @@ flake8:
 	flake8 backend
 
 docker_dbs_up:
-	docker-compose up postgres rabbitmq elasticsearch
+	docker-compose up -d postgres rabbitmq elasticsearch
 
 docker_dbs_down:
-	docker-compose down postgres rabbitmq
+	docker-compose down postgres rabbitmq elasticsearch
+
+docker_dbs_down_volumes:
+	docker-compose down postgres rabbitmq elasticsearch --volumes
 
 latest_tag:
 	git describe --abbrev=0 --tags

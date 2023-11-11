@@ -1,3 +1,6 @@
 vectors
 **/__pycache__
 .mypy_cache
+.idea
+venv
+.env
