@@ -1,16 +1,57 @@
 import requests
-from txtai.ann import Faiss
 
 base_url = "http://127.0.0.1:5000"
 
-url = f"{base_url}/api/v1/documents/"
-response = requests.post(url, json={"source": "aarni", "texts": ["I like cooking.", "I like steel manufacturing", "Steel manufacturing rocks!"]})
+# url = f"{base_url}/api/v1/documents/"
+# response = requests.post(url, json={"source": "aarni", "texts": ["I like cooking.", "I like steel manufacturing", "Steel manufacturing rocks!"]})
+# print(response.json())
+
+# url = f"{base_url}/api/v1/documents/search/"
+# response = requests.post(url, json={"query": "How much does steel manufacturing rock?"})
+# print(response.json())
+
+# url = f"{base_url}/api/v1/trends/"
+# response = requests.post(
+#     url,
+#     json={
+#         "title": "My Trend",
+#         "description": "My description",
+#         "keywords": ["kw"],
+#         "urls": None,
+#         "scrape_interval": "daily",
+#     },
+# )
+# trend = response.json()
+# print(trend)
+
+# url = f"{base_url}/api/v1/trends/"
+# response = requests.get(url)
+# print(response.json())
+
+# trend_id = trend["id"]
+
+trend_id = 1
+url = f"{base_url}/api/v1/trends/{trend_id}"
+response = requests.put(
+    url,
+    json={
+        "id": trend_id,
+        "title": "My Trend Updated",
+        "description": "My description",
+        "keywords": ["kw2"],
+        "urls": None,
+        "scrape_interval": "daily",
+    },
+)
 print(response.json())
 
-url = f"{base_url}/api/v1/documents/search/"
-response = requests.post(url, json={"query": "How much does steel manufacturing rock?"})
-print(response.json())
+url = f"{base_url}/api/v1/trends/{trend_id}/"
+response = requests.delete(url)
+print(response.status_code)
 
+url = f"{base_url}/api/v1/trends/"
+response = requests.get(url)
+print(response.json())
 
 # Faiss({
 #     "content": p

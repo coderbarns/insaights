@@ -23,11 +23,7 @@ class Document(BaseDocument):
     reliable: Optional[float]
 
 
-class DocumentSearchResult(BaseDocument):
-    id: int
-    source_type: str
-    link_title: Optional[str]
-    reliable: Optional[float]
+class DocumentSearchResult(Document):
     score: float
 
 

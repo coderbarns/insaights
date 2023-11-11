@@ -7,6 +7,7 @@ from sqlalchemy import (
     Float,
     create_engine,
 )
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 from src.config import settings
@@ -25,7 +26,7 @@ class Document(Base):
     source_type = Column(String)
     source = Column(String)
     link_title = Column(String, nullable=True)
-    reliable = Column(Boolean, nullable=True, default=None)
+    reliable = Column(Float, nullable=True)
 
 
 class Prompt(Base):
@@ -41,11 +42,35 @@ class DocumentPrompt(Base):
     id = Column(Integer, primary_key=True, index=True)
     document_id = Column(Integer, ForeignKey("documents.id"))
     prompt_id = Column(Integer, ForeignKey("prompts.id"))
-    relevance = Float()
-    impact = Float()
+    relevance = Column(Float)
+    impact = Column(Float)
 
     prompt = relationship("Prompt", backref="document_relationships")
     document = relationship("Document", backref="prompt_relationships")
+
+
+class DocumentTrend(Base):
+    __tablename__ = "documents__trends"
+
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey("documents.id"))
+    trend_id = Column(Integer, ForeignKey("trends.id"))
+    relevance = Column(Float)
+    impact = Column(Float)
+
+    trend = relationship("Trend", backref="document_relationships")
+    document = relationship("Document", backref="trend_relationships")
+
+
+class Trend(Base):
+    __tablename__ = "trends"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String)
+    description = Column(String)
+    keywords = Column(ARRAY(String))
+    urls = Column(ARRAY(String), nullable=True)
+    scrape_interval = Column(String)
 
 
 if __name__ == "__main__":
