@@ -1,0 +1,71 @@
+version: '3'
+services:
+  postgres:
+    platform: linux/x86_64
+    image: postgres:15.4
+    container_name: scraip_postgres
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/scraip
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    env_file:
+      - ./backend/.env
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: scraip_rabbitmq
+    env_file:
+      - ./backend/.env
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "15672:15672"
+
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: scraip_elasticsearch
+    env_file:
+      - ./backend/.env
+    volumes:
+      - elasticdata:/usr/share/elasticsearch/data
+    ports:
+      - ${ES_PORT}:9200
+
+  # celery_worker: &celery
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/celery/Dockerfile
+  #   container_name: scraip_worker
+  #   command: sh -c "python manage.py wait_for_db && python manage.py create_test_graph && celery -A main worker --loglevel=info"
+  #   volumes:
+  #     - ./:/app
+  #   env_file:
+  #     - ./backend/.env
+  #   environment:
+  #     - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/${RABBITMQ_DEFAULT_VHOST}
+  #     - CELERY_BROKER=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/${RABBITMQ_DEFAULT_VHOST}
+  #     - CELERY_BACKEND=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/${RABBITMQ_DEFAULT_VHOST}
+  #     # Postgres must be reached within local docker network
+  #     - POSTGRES_HOST=postgres
+  #     - POSTGRES_PORT=5432
+  #     # Neo4j must be reached within local docker network
+  #     - NEO4J_BOLT_URL=bolt://neo4j:foobar@neo4j_db:7687
+  #   depends_on:
+  #     - rabbitmq
+  #     - postgres
+  #     - neo4j_db
+
+  # celery_flower:
+  #   <<: *celery
+  #   container_name: scraip_flower
+  #   command: sh -c "sleep 10s && celery -A main flower --broker_api=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:15672/api/"
+  #   ports:
+  #     - "5555:5555"
+  #   depends_on:
+  #     - postgres
+  #     - rabbitmq
+  #     - celery_worker
+
+volumes:
+  pgdata:
+  elasticdata:
