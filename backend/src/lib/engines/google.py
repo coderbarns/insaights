@@ -3,7 +3,7 @@ from typing import List
 import requests
 import json
 
-from src.lib.engines.types_ import SearchEngine, SearchResult
+from src.lib.engines._types import SearchEngine, SearchResult
 from src.config import settings
 
 URL = "https://www.googleapis.com/customsearch/v1"
@@ -20,12 +20,29 @@ class GoogleEngine(SearchEngine):
         self._site = site
         self._verbose = verbose
 
-    def search(self, query: str) -> List[SearchResult]:
+    def search(self, query: str, limit: int = 10) -> List[SearchResult]:
+        results = []
+        total = 1
+        page = 0
+
+        while len(results) < min(total, limit):
+            response_results, response_total = self._search_page(query, page)
+
+            results.extend(response_results)
+            total = response_total
+            page += 1
+
+        return results[:min(total, limit)]
+
+    def _search_page(self, query: str, page: int = 0) -> (List[SearchResult], int):
+        """
+        Returns results for page and number of total results
+        """
         params = {
             "key": KEY,
             "cx": CX,
             "q": query,
-            # "startIndex": 1 + page * 10,
+            "startIndex": 1 + page * 10,
         }
 
         if self._date_restrict:
@@ -50,21 +67,23 @@ class GoogleEngine(SearchEngine):
         for item in data["items"]:
             url = item["link"]
             title = item["title"]
-            snippet = item["snippet"]
-            description = None
+            description = item["snippet"]
+            meta = item["pagemap"]["metatags"][0]
 
-            if "og:description" in item["pagemap"]["metatags"][0]:
-                description = item["pagemap"]["metatags"][0]["og:description"]
-
-            result = SearchResult(url, title, snippet, description)
+            result = SearchResult(url, title, description, meta)
             results.append(result)
 
-        return results
+        total = int(data["searchInformation"]["totalResults"])
+
+        return results, total
 
 
 def test():
-    engine = GoogleEngine("m1", verbose=True)
-    results = engine.search("energy price development news")
+    engine = GoogleEngine("m1", verbose=True, site="bbc.com")
+    results = engine.search("stainless steel manufacturing", 15)
+
+    print("COUNT:", len(results))
+
     for result in results:
         print(result)
 

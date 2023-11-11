@@ -10,26 +10,16 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     env_file:
-      - ./backend/.env
+      - .env
 
   rabbitmq:
     image: rabbitmq:management
     container_name: scraip_rabbitmq
     env_file:
-      - ./backend/.env
+      - .env
     ports:
       - "${RABBITMQ_PORT}:5672"
       - "15672:15672"
-
-  elasticsearch:
-    image: elasticsearch:8.11.0
-    container_name: scraip_elasticsearch
-    env_file:
-      - ./backend/.env
-    volumes:
-      - elasticdata:/usr/share/elasticsearch/data
-    ports:
-      - ${ES_PORT}:9200
 
   # celery_worker: &celery
   #   build:
@@ -40,7 +30,7 @@ services:
   #   volumes:
   #     - ./:/app
   #   env_file:
-  #     - ./backend/.env
+  #     - .env
   #   environment:
   #     - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/${RABBITMQ_DEFAULT_VHOST}
   #     - CELERY_BROKER=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/${RABBITMQ_DEFAULT_VHOST}
@@ -69,3 +59,4 @@ services:
 volumes:
   pgdata:
   elasticdata:
+  kibanadata:

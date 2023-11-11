@@ -3,8 +3,9 @@ from typing import List
 import requests
 import json
 
-from src.lib.engines.types_ import SearchEngine, SearchResult
+from src.lib.engines._types import SearchEngine, SearchResult
 from src.config import settings
+from src.lib.utils import get_dict_value
 
 URL = "https://yle-fi-search.api.yle.fi/v1/search"
 APP_ID = "hakuylefi_v2_prod"
@@ -16,7 +17,10 @@ class YleEngine(SearchEngine):
         self._language = language
         self._verbose = verbose
 
-    def search(self, query: str) -> List[SearchResult]:
+    def search(self, query: str, limit: int = 10) -> List[SearchResult]:
+        """
+        TODO: pagination
+        """
         params = {
             "app_id": APP_ID,
             "app_key": APP_KEY,
@@ -40,10 +44,13 @@ class YleEngine(SearchEngine):
         for item in data["data"]:
             url = item["url"]["full"]
             title = item["headline"]
-            snippet = None
             description = item["lead"]
+            meta = {
+                "published": get_dict_value(item, "datePublished"),
+                "author": get_dict_value(item, "author"),
+            }
 
-            result = SearchResult(url, title, snippet, description)
+            result = SearchResult(url, title, description, meta)
             results.append(result)
 
         return results

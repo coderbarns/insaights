@@ -9,17 +9,28 @@ class Settings(BaseSettings):
 
     LOG_LEVEL: str = "INFO"
 
+    POSTGRES_SCHEME: str = "postgresql+psycopg2"
     POSTGRES_HOST: str = "localhost"
+    POSTGRES_PORT: int = "5434"
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "scraip"
-    POSTGRES_PORT: int = "5434"
 
-    POSTGRES_CONNECTION_URI: str = f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+    ES_SCHEME: str = "http"
+    ES_PORT: int = 9200
+    ES_HOST: str = "localhost"
+    ES_USER: str = ""
+    ES_PASSWORD: str = ""
 
-    TXTAI_CONFIG: dict = {
-        "content": POSTGRES_CONNECTION_URI,
-    }
+    EMBEDDINGS_PATH: str = "embeddings"
+
+    def get_pg_connection_uri(self):
+        return f"{self.POSTGRES_SCHEME}://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+
+    def get_es_connection_uri(self):
+        if self.ES_USER == "" or self.ES_PASSWORD == "":
+            return f"{self.ES_SCHEME}://{self.ES_HOST}:{self.ES_PORT}"
+        return f"{self.ES_SCHEME}://{self.ES_USER}:{self.ES_PASSWORD}@{self.ES_HOST}:{self.ES_PORT}"
 
 
 settings = Settings()
