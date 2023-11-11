@@ -5,6 +5,7 @@ import txtai
 
 embeddings = None
 
+
 @lru_cache
 def get_settings():
     return Settings()
@@ -20,6 +21,5 @@ def get_db():
 
 def get_embeddings():
     global embeddings
-    settings = get_settings()
-    embeddings = txtai.Embeddings(config=settings.TXTAI_CONFIG)
+    embeddings = txtai.Embeddings()
     return embeddings
