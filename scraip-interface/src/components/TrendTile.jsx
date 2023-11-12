@@ -12,7 +12,7 @@ import {
 import TrendModal from "./TrendModal";
 
 const TrendTile = ({ trendData }) => {
-  const { browserQuery, description, urls, summary } = trendData;
+  const { title, keywords, description, urls, summary, updated } = trendData;
 
   return (
     <div
@@ -34,7 +34,8 @@ const TrendTile = ({ trendData }) => {
               width: "fit-content",
             }}
           >
-            <h3>{browserQuery}</h3>
+            <h3>{title}</h3>
+            <h5>Updated: {new Date(updated).toDateString()}</h5>
             <div
               style={{
                 paddingTop: "1rem",
@@ -42,7 +43,6 @@ const TrendTile = ({ trendData }) => {
             >
               {summary}
             </div>
-            {description}
           </div>
         </TileAboveTheFoldContent>
         <TileBelowTheFoldContent>
@@ -52,7 +52,13 @@ const TrendTile = ({ trendData }) => {
               width: "360px",
             }}
           >
-            <h5>Relevant links</h5>
+            <h4>Query</h4>
+            <p>{keywords[0]}</p>
+            <br />
+            <h4>Description</h4>
+            <p>{description}</p>
+            <br />
+            <h4>Sites</h4>
             <OrderedList style={{ padding: "10px 10px 10px 30px" }}>
               {urls.map((website, index) => (
                 <ListItem key={index}>
@@ -60,7 +66,6 @@ const TrendTile = ({ trendData }) => {
                 </ListItem>
               ))}
             </OrderedList>
-            <h4>summary</h4>
           </div>
           <div
             style={{

@@ -51,7 +51,7 @@ function TrendModal({ onNewTrend }) {
         keywords: [browserQuery],
         urls: websites,
         scrape_interval: scrapeInterval,
-        summary: "Pending",
+        summary: "Overwiew is being generated.",
         updated: new Date().toJSON(), // not used
       })
       .then(function (response) {
@@ -79,7 +79,7 @@ function TrendModal({ onNewTrend }) {
   return (
     <>
       <Button ref={button} onClick={() => setOpen(true)}>
-        Add trend
+        Add Trend
       </Button>
 
       <ComposedModal
@@ -119,7 +119,7 @@ function TrendModal({ onNewTrend }) {
             />
             <ProgressStep
               current={websites.length > 0}
-              label="Set Trend"
+              label="Save Trend"
               secondaryLabel="Get your insights"
             />
           </ProgressIndicator>
@@ -134,7 +134,7 @@ function TrendModal({ onNewTrend }) {
             data-modal-primary-focus
             id="text-input-1"
             labelText="Title"
-            placeholder="Name for your data module"
+            placeholder="Name for your Trend"
             value={currentTitle}
             onChange={(e) => setCurrentTitle(e.target.value)}
             style={{
@@ -156,7 +156,7 @@ function TrendModal({ onNewTrend }) {
             data-modal-primary-focus
             id="text-input-1"
             labelText="Description"
-            placeholder="Describe your wanted results (e.g. how are environmental catastrophies affecting energy production and pricing.)"
+            placeholder="Describe your wanted results (e.g. How are environmental catastrophies affecting energy production and pricing?)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             style={{
@@ -208,7 +208,7 @@ function TrendModal({ onNewTrend }) {
             Close
           </Button>
           <Button style={{}} onClick={() => handleSubmit()}>
-            Set Trend
+            Save Trend
           </Button>
         </ModalFooter>
       </ComposedModal>
