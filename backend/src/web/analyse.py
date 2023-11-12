@@ -26,6 +26,8 @@ def fetch_trend(trend: models.Trend):
     results = embeddings.search(query=trend.description, limit=10)
     documents_for_summary = get_document_search_results(db, results)
 
+    logging.debug("fetching summary")
+
     assistant = Assistant()
     conversation = assistant.start(trend.description, documents_for_summary)
     trend.summary = conversation[-1].content

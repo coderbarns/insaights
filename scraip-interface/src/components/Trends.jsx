@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TrendModal from "./TrendModal"; // Import your TrendModal
 import TrendTile from "./TrendTile"; // Import your TrendTile
 
 import { Heading } from "@carbon/react";
+import axios from "axios";
 
 const TrendsDashboard = () => {
   const [trends, setTrends] = useState([]); // Array to hold trend data
@@ -10,6 +11,21 @@ const TrendsDashboard = () => {
   const handleNewTrend = (newTrend) => {
     setTrends([...trends, newTrend]);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/v1/trends");
+        if (response.data) {
+          setTrends(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>

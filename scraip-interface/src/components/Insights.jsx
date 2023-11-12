@@ -1,28 +1,44 @@
 // import TrendModal from "./TrendModal";
-import {
-  Button,
-  Header,
-  HeaderName,
-  Heading,
-  Search,
-  TreeView,
-  TreeNode,
-} from "@carbon/react";
-
+import { Button, Heading, Search } from "@carbon/react";
+import axios from "axios";
 import { useState } from "react";
 import React, { useEffect, useRef } from "react";
 
-const Insights = () => {
-  const [queries, setQueries] = useState([]);
-  const [currentInput, setCurrentInput] = useState("");
-  const containerRef = useRef(null);
+function uuidv4() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) =>
+    (
+      c ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+    ).toString(16)
+  );
+}
 
-  console.log(queries);
+const Insights = () => {
+  const [conversationId, setConversationId] = useState([]);
+  const [data, setData] = useState({ messages: [], documents: [] });
+  const [currentInput, setCurrentInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const containerRef = useRef(null);
 
   const addQuery = () => {
     if (currentInput) {
-      setQueries([...queries, currentInput]);
-      setCurrentInput("");
+      setLoading(true);
+
+      axios
+        .post("http://localhost:5000/api/v1/documents/search/", {
+          conversation_id: conversationId,
+          query: currentInput,
+        })
+        .then(function (response) {
+          console.log(response);
+          setData(response.data);
+          setCurrentInput("");
+          setLoading(false);
+        })
+        .catch(function (error) {
+          console.log(error);
+          setLoading(false);
+        });
     }
   };
 
@@ -42,7 +58,11 @@ const Insights = () => {
         scrollToBottom();
       }
     }
-  }, [queries]);
+  }, [data]);
+
+  useEffect(() => {
+    setConversationId(uuidv4());
+  }, []);
 
   return (
     <div>
@@ -59,7 +79,7 @@ const Insights = () => {
           height: "75vh",
         }}
       >
-        {queries.length === 0 && (
+        {data.messages.length === 0 && (
           <div
             style={{
               display: "flex",
@@ -86,34 +106,20 @@ const Insights = () => {
           </div>
         )}
 
-        {queries.length > 0 && (
+        {data.messages.length > 0 && (
           <div ref={containerRef} style={{ width: "100%" }}>
-            {queries.map((query, index) => (
-              <div key={index}>
-                <h4 style={{ fontWeight: "bold", margin: "20px" }}>{query}</h4>
-                <p style={{ margin: "20px", marginBottom: "40px" }}>
-                  For practicality, we expect the assistant to be able to
-                  connect to the internet, fetch relevant data and be able to
-                  produce well summarized results in human readable format in
-                  the range of one or two paragraphs per question – with a
-                  special focus on avoiding hallucinations and basing the
-                  results on the source information and being ecological and
-                  efficient in how this is done. The results should always
-                  include a reference to the sources of the information used to
-                  construct the answer. The architecture should be such that the
-                  actual model component is easily interchangeable (as this is a
-                  rapidly developing field), and working from the assumption
-                  that you do not need to fine-tune or retrain the actual model,
-                  but supply the data through prompting in a way that you find
-                  most effective. And in order to evaluate your ecological
-                  consumption, we would like you to also estimate the energy
-                  impact of the query having been executed (understanding that
-                  this is just an estimate, and using the number and size of
-                  queries and size of the model used as proxy is a good approach
-                  – although we welcome you to innovate also in this front)
-                </p>
-              </div>
-            ))}
+            {data.messages
+              .filter((v) => v.role == "assistant" || v.role == "user")
+              .map((message, index) => (
+                <div key={index}>
+                  <h4 style={{ fontWeight: "bold", margin: "20px" }}>
+                    {message.role}
+                  </h4>
+                  <p style={{ margin: "20px", marginBottom: "40px" }}>
+                    {message.content}
+                  </p>
+                </div>
+              ))}
           </div>
         )}
       </div>
@@ -138,7 +144,9 @@ const Insights = () => {
           />
         </div>
         <div>
-          <Button onClick={addQuery}>Find Insights</Button>
+          <Button onClick={addQuery} disabled={loading}>
+            {loading ? "Loading..." : "Find Insights"}
+          </Button>
         </div>
       </div>
       <p

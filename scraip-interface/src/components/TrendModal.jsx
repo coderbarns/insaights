@@ -12,6 +12,7 @@ import {
 } from "@carbon/react";
 
 import { useState, useRef } from "react";
+import axios from "axios";
 
 function TrendModal({ onNewTrend }) {
   const [open, setOpen] = useState(false);
@@ -19,6 +20,8 @@ function TrendModal({ onNewTrend }) {
   const [description, setDescription] = useState("");
   const [websites, setWebsites] = useState([]);
   const [currentWebsite, setCurrentWebsite] = useState("");
+  const [currentTitle, setCurrentTitle] = useState("");
+  const [scrapeInterval, setScrapeInterval] = useState("");
   const button = useRef();
 
   const addWebsite = (event) => {
@@ -41,13 +44,22 @@ function TrendModal({ onNewTrend }) {
   };
 
   const handleSubmit = () => {
-    const newTrend = {
-      browserQuery,
-      description,
-      websites,
-    };
-
-    onNewTrend(newTrend);
+    axios
+      .post("http://localhost:5000/api/v1/trends", {
+        title: currentTitle,
+        description: description,
+        keywords: [browserQuery],
+        urls: websites,
+        scrape_interval: scrapeInterval,
+        summary: "Pending",
+        updated: new Date().toJSON(), // not used
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
     setBrowserQuery("");
     setDescription("");
@@ -123,8 +135,8 @@ function TrendModal({ onNewTrend }) {
             id="text-input-1"
             labelText="Title"
             placeholder="Name for your data module"
-            value={browserQuery}
-            onChange={(e) => setBrowserQuery(e.target.value)}
+            value={currentTitle}
+            onChange={(e) => setCurrentTitle(e.target.value)}
             style={{
               marginBottom: "1rem",
             }}
@@ -157,10 +169,12 @@ function TrendModal({ onNewTrend }) {
             style={{
               marginBottom: "1rem",
             }}
+            value={scrapeInterval}
+            onChange={(e) => setScrapeInterval(e.target.value)}
           >
-            <SelectItem value={1} text="Once a day" />
-            <SelectItem value={2} text="Once a week" />
-            <SelectItem value={3} text="Once a month" />
+            <SelectItem value={"daily"} text="Once a day" />
+            <SelectItem value={"weekly"} text="Once a week" />
+            <SelectItem value={"monthly"} text="Once a month" />
           </Select>
           <TextInput
             data-modal-primary-focus
@@ -168,7 +182,7 @@ function TrendModal({ onNewTrend }) {
             onChange={handleInputChange}
             id="website-input"
             labelText="Relevant websites"
-            placeholder="https://example.com"
+            placeholder="example.com"
             style={{
               marginBottom: "1rem",
             }}
