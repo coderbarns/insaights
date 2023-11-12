@@ -20,7 +20,7 @@ docker_up:
 	docker-compose up -d
 
 docker_dbs_up:
-	docker-compose up -d
+	docker-compose up -d postgres
 
 docker_down:
 	docker-compose down
