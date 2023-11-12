@@ -3,16 +3,28 @@ import {
   TileAboveTheFoldContent,
   TileBelowTheFoldContent,
   Button,
-  TextInput,
   OrderedList,
   ListItem,
   Link,
 } from "@carbon/react";
+import axios from "axios";
 
-import TrendModal from "./TrendModal";
 
-const TrendTile = ({ trendData }) => {
-  const { title, keywords, description, urls, summary, updated } = trendData;
+const TrendTile = ({ trendData, removeTrend, onEdit }) => {
+  const { id, title, keywords, description, urls, summary, updated } = trendData;
+
+  const onDelete = () => {
+    console.log("delete");
+    axios
+      .delete(`http://127.0.0.1:5000/api/v1/trends/${id}/`)
+      .then(function (response) {
+        console.log("deleted");
+        removeTrend(id);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   return (
     <div
@@ -74,8 +86,8 @@ const TrendTile = ({ trendData }) => {
               justifyContent: "space-between",
             }}
           >
-            <Button onClick={TrendModal}>Edit</Button>
-            <Button style={{ backgroundColor: "#D3D3D3", color: "black" }}>
+            <Button onClick={onEdit}>Edit</Button>
+            <Button onClick={onDelete} style={{ backgroundColor: "#D3D3D3", color: "black" }}>
               Delete
             </Button>
           </div>

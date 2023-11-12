@@ -11,80 +11,74 @@ import {
   SelectItem,
 } from "@carbon/react";
 
-import { useState, useRef } from "react";
 import axios from "axios";
 
-function TrendModal({ onNewTrend }) {
-  const [open, setOpen] = useState(false);
-  const [browserQuery, setBrowserQuery] = useState("");
-  const [description, setDescription] = useState("");
-  const [websites, setWebsites] = useState([]);
-  const [currentWebsite, setCurrentWebsite] = useState("");
-  const [currentTitle, setCurrentTitle] = useState("");
-  const [scrapeInterval, setScrapeInterval] = useState("");
-  const button = useRef();
+export const initalModalData = {
+  id: null,
+  keywords: "",
+  description: "",
+  urls: [],
+  currentWebsite: "",
+  title: "",
+  scrape_interval: "",
+}
+
+function TrendModal({ showTrendModal, onSubmit, onClose, modalData, setModalData }) {
+  const { id, title, keywords, description, scrape_interval, urls } = modalData;
 
   const addWebsite = (event) => {
     event.preventDefault();
-    if (currentWebsite) {
-      setWebsites([...websites, currentWebsite]);
-      setCurrentWebsite("");
+    if (modalData.currentWebsite) {
+      setModalData({ ...modalData, urls: [...urls, modalData.currentWebsite], currentWebsite: "" });
     }
   };
 
   const handleInputChange = (event) => {
-    setCurrentWebsite(event.target.value);
-  };
-
-  const resetForm = () => {
-    setBrowserQuery("");
-    setDescription("");
-    setCurrentWebsite("");
-    setWebsites([]);
+    setModalData({ ...modalData, currentWebsite: event.target.value });
   };
 
   const handleSubmit = () => {
-    axios
-      .post("http://127.0.0.1:5000/api/v1/trends", {
-        title: currentTitle,
-        description: description,
-        keywords: [browserQuery],
-        urls: websites,
-        scrape_interval: scrapeInterval,
-        summary: "Overwiew is being generated.",
-        updated: new Date().toJSON(), // not used
-      })
+    var data = {
+      title: title,
+      description: description,
+      keywords: [keywords],
+      urls: urls,
+      scrape_interval: scrape_interval,
+      summary: "Overwiew is being generated.",
+      updated: new Date().toJSON(), // not used
+    }
+    var method;
+    var url
+    if (id) {
+      method = axios.put;
+      url = `http://127.0.0.1:5000/api/v1/trends/${id}`
+    } else {
+      method = axios.post;
+      url = "http://127.0.0.1:5000/api/v1/trends"
+      data['id'] = id;
+    }
+    method(url, {
+      title: title,
+      description: description,
+      keywords: [keywords],
+      urls: urls,
+      scrape_interval: scrape_interval,
+      summary: "Overwiew is being generated.",
+      updated: new Date().toJSON(), // not used
+    })
       .then(function (response) {
         console.log(response);
-        onNewTrend(response.data);
-
-        setBrowserQuery("");
-        setDescription("");
-        setCurrentWebsite("");
-        setWebsites([]);
-
-        handleSetOpen();
+        onSubmit();
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  const handleSetOpen = (newOpen) => {
-    if (!newOpen) {
-      resetForm();
-    }
-    setOpen(newOpen);
-  };
-
   return (
     <>
-      <Button ref={button} onClick={() => setOpen(true)}>
-        Add Trend
-      </Button>
-
       <ComposedModal
-        open={open}
+        open={showTrendModal}
         preventCloseOnClickOutside={true}
         style={{ padding: "20px" }}
       >
@@ -97,29 +91,29 @@ function TrendModal({ onNewTrend }) {
             }}
           >
             <ProgressStep
-              current={websites.length > 0}
+              current={urls.length > 0}
               label="Title"
               secondaryLabel="Name your module"
             />
             <ProgressStep
-              complete={browserQuery !== ""}
+              complete={keywords !== ""}
               label="Add query"
               secondaryLabel="Add your search query"
             />
             <ProgressStep
               complete={description !== ""}
-              current={browserQuery !== "" && description === ""}
+              current={keywords !== "" && description === ""}
               label="Add description"
               secondaryLabel="Describe your wanted results"
             />
             <ProgressStep
-              complete={websites.length > 0}
-              current={description !== "" && websites.length === 0}
+              complete={urls.length > 0}
+              current={description !== "" && urls.length === 0}
               label="Add sites"
               secondaryLabel="Add relevant sites to your search"
             />
             <ProgressStep
-              current={websites.length > 0}
+              current={urls.length > 0}
               label="Save Trend"
               secondaryLabel="Get your insights"
             />
@@ -136,8 +130,8 @@ function TrendModal({ onNewTrend }) {
             id="text-input-1"
             labelText="Title"
             placeholder="Name for your Trend"
-            value={currentTitle}
-            onChange={(e) => setCurrentTitle(e.target.value)}
+            value={title}
+            onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
             style={{
               marginBottom: "1rem",
             }}
@@ -147,8 +141,8 @@ function TrendModal({ onNewTrend }) {
             id="text-input-1"
             labelText="Search query"
             placeholder="e.g. Environmental catastrophies in Europe"
-            value={browserQuery}
-            onChange={(e) => setBrowserQuery(e.target.value)}
+            value={keywords}
+            onChange={(e) => setModalData({ ...modalData, keywords: [e.target.value] })}
             style={{
               marginBottom: "1rem",
             }}
@@ -159,7 +153,7 @@ function TrendModal({ onNewTrend }) {
             labelText="Description"
             placeholder="Describe your wanted results (e.g. How are environmental catastrophies affecting energy production and pricing?)"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => setModalData({ ...modalData, description: e.target.value })}
             style={{
               marginBottom: "1rem",
             }}
@@ -170,8 +164,8 @@ function TrendModal({ onNewTrend }) {
             style={{
               marginBottom: "1rem",
             }}
-            value={scrapeInterval}
-            onChange={(e) => setScrapeInterval(e.target.value)}
+            value={scrape_interval}
+            onChange={(e) => setModalData({ ...modalData, scrape_interval: e.target.value })}
           >
             <SelectItem value={"daily"} text="Once a day" />
             <SelectItem value={"weekly"} text="Once a week" />
@@ -179,10 +173,10 @@ function TrendModal({ onNewTrend }) {
           </Select>
           <TextInput
             data-modal-primary-focus
-            value={currentWebsite}
+            value={modalData.currentWebsite}
             onChange={handleInputChange}
             id="website-input"
-            labelText="Relevant websites"
+            labelText="Relevant urls"
             placeholder="example.com"
             style={{
               marginBottom: "1rem",
@@ -190,11 +184,11 @@ function TrendModal({ onNewTrend }) {
           />
           <Button onClick={addWebsite}>Add Website</Button>
 
-          {websites.length > 0 && (
+          {urls.length > 0 && (
             <div style={{ marginTop: "1rem" }}>
               <p>Added Websites:</p>
               <ul>
-                {websites.map((website, index) => (
+                {urls.map((website, index) => (
                   <li key={index}>{website}</li>
                 ))}
               </ul>
@@ -204,7 +198,7 @@ function TrendModal({ onNewTrend }) {
         <ModalFooter>
           <Button
             style={{ backgroundColor: "#D3D3D3", color: "black" }}
-            onClick={() => handleSetOpen()}
+            onClick={() => onClose()}
           >
             Close
           </Button>
