@@ -1,5 +1,12 @@
 // import TrendModal from "./TrendModal";
-import { Button, Heading, Search, TreeNode, TreeView } from "@carbon/react";
+import {
+  Button,
+  Heading,
+  Search,
+  TreeNode,
+  TreeView,
+  Slider,
+} from "@carbon/react";
 import axios from "axios";
 import { useState } from "react";
 import React, { useEffect, useRef } from "react";
@@ -70,7 +77,7 @@ const Insights = () => {
     {
       id: "1",
       value: "assistant",
-      label: <span>AI Assistant</span>,
+      label: <span>InsAIghts Assistant</span>,
       renderIcon: Document,
     },
     {
@@ -105,6 +112,15 @@ const Insights = () => {
     ));
   };
 
+  const getSource = (link) => {
+    const result = data.documents.filter((v) => v.source == link);
+    if (result.length == 1) {
+      return result[0];
+    }
+
+    return null;
+  };
+
   return (
     <div>
       {/* <div style={{ display: "flex", maxWidth: "1260px", margin: "auto" }}>
@@ -126,11 +142,13 @@ const Insights = () => {
             height: "75vh",
           }}
         >
-          <h4>{display}</h4>
+          <h4>{getSource(display)?.link_title}</h4>
           <iframe
-            src={"https://" + display}
+            src={display}
             style={{ width: "100%", height: "100%" }}
           ></iframe>
+          <h5>Relevance</h5>
+          <Slider labelText="Slider label" max={100} min={0} />
         </div>
       )}
 
@@ -176,13 +194,20 @@ const Insights = () => {
             {data.messages.length > 0 && (
               <div ref={containerRef} style={{ width: "100%" }}>
                 {data.messages
-                  .filter((v) => v.role == "assistant" || v.role == "user")
+                  .filter(
+                    (v) =>
+                      (v.role == "assistant" || v.role == "user") &&
+                      v.content &&
+                      v.content.indexOf("Title:") === -1
+                  )
                   .map((message, index) => (
                     <div key={index}>
-                      <h4 style={{ fontWeight: "bold", margin: "20px" }}>
-                        {message.role}
-                      </h4>
-                      <p style={{ margin: "20px", marginBottom: "40px" }}>
+                      <h5 style={{ fontWeight: "bold", margin: "10px" }}>
+                        {message.role == "assistant"
+                          ? "InsAIghts Assistant"
+                          : "User"}
+                      </h5>
+                      <p style={{ margin: "10px", marginBottom: "40px" }}>
                         {message.content}
                       </p>
                     </div>

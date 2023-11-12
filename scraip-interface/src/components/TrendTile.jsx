@@ -41,7 +41,7 @@ const TrendTile = ({ trendData }) => {
                 paddingTop: "1rem",
               }}
             >
-              {summary}
+              {summary.substring(0, 1000)}...
             </div>
           </div>
         </TileAboveTheFoldContent>
