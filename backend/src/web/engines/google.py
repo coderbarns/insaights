@@ -3,7 +3,7 @@ from typing import List
 import requests
 import json
 
-from src.scraper.types_ import SearchEngine, SearchResult, SearchEngineCutoff
+from src.web.types_ import SearchEngine, SearchResult, SearchEngineCutoff
 from src.config import settings
 
 URL = "https://www.googleapis.com/customsearch/v1"

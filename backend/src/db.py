@@ -4,6 +4,7 @@ from sqlalchemy import (
     Integer,
     String,
     Float,
+    JSON,
     create_engine,
 )
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -21,11 +22,13 @@ class Document(Base):
     __tablename__ = "documents"
 
     id = Column(Integer, primary_key=True, index=True)
-    text = Column(String)
-    source_type = Column(String)
-    source = Column(String)
+    text = Column(String)  # short summary for embeddings (5 sentences)
+    source_type = Column(String)  # url vs other reference
+    source = Column(String)  # url
     link_title = Column(String, nullable=True)
     reliable = Column(Float, nullable=True)
+    meta = Column(JSON, nullable=True)  # content from meta tags
+    full_text = Column(String, nullable=True)
 
 
 class Prompt(Base):
