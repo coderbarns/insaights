@@ -4,7 +4,6 @@ from sqlalchemy import (
     Integer,
     String,
     Float,
-    JSON,
     create_engine,
 )
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -22,33 +21,11 @@ class Document(Base):
     __tablename__ = "documents"
 
     id = Column(Integer, primary_key=True, index=True)
-    text = Column(String)  # short summary for embeddings (5 sentences)
-    source_type = Column(String)  # url vs other reference
-    source = Column(String)  # url
-    link_title = Column(String, nullable=True)
-    reliable = Column(Float, nullable=True)
-    meta = Column(JSON, nullable=True)  # content from meta tags
-    full_text = Column(String, nullable=True)
-
-
-class Prompt(Base):
-    __tablename__ = "prompts"
-
-    id = Column(Integer, primary_key=True, index=True)
     text = Column(String)
-
-
-class DocumentPrompt(Base):
-    __tablename__ = "documents__prompts"
-
-    id = Column(Integer, primary_key=True, index=True)
-    document_id = Column(Integer, ForeignKey("documents.id"))
-    prompt_id = Column(Integer, ForeignKey("prompts.id"))
-    relevance = Column(Float)
-    impact = Column(Float)
-
-    prompt = relationship("Prompt", backref="document_relationships")
-    document = relationship("Document", backref="prompt_relationships")
+    source_type = Column(String)
+    source = Column(String)
+    link_title = Column(String, nullable=True)
+    reliability = Column(Float, nullable=True)
 
 
 class DocumentTrend(Base):
@@ -57,7 +34,6 @@ class DocumentTrend(Base):
     id = Column(Integer, primary_key=True, index=True)
     document_id = Column(Integer, ForeignKey("documents.id"))
     trend_id = Column(Integer, ForeignKey("trends.id"))
-    relevance = Column(Float)
     impact = Column(Float)
 
     trend = relationship("Trend", backref="document_relationships")
@@ -88,8 +64,8 @@ class DocumentQuery(Base):
     id = Column(Integer, primary_key=True, index=True)
     document_id = Column(Integer, ForeignKey("documents.id"))
     query_id = Column(Integer, ForeignKey("queries.id"))
-    relevance = Column(Float)
     impact = Column(Float)
+    score = Column(Float)
 
     document = relationship("Document", backref="query_relationships")
     query = relationship("Query", backref="document_relationships")
