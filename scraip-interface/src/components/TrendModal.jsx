@@ -45,7 +45,7 @@ function TrendModal({ onNewTrend }) {
 
   const handleSubmit = () => {
     axios
-      .post("http://localhost:5000/api/v1/trends", {
+      .post("http://127.0.0.1:5000/api/v1/trends", {
         title: currentTitle,
         description: description,
         keywords: [browserQuery],
