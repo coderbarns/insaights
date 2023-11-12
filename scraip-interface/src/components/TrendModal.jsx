@@ -37,38 +37,35 @@ function TrendModal({ showTrendModal, onSubmit, onClose, modalData, setModalData
     setModalData({ ...modalData, currentWebsite: event.target.value });
   };
 
-  const handleSubmit = () => {
-    var data = {
+  const getData = () => {
+    return {
       title: title,
       description: description,
-      keywords: [keywords],
+      keywords: keywords,
       urls: urls,
       scrape_interval: scrape_interval,
-      summary: "Overwiew is being generated.",
+      summary: "Overview is being generated.",
       updated: new Date().toJSON(), // not used
     }
+  }
+
+  const handleSubmit = () => {
+    var data = getData()
     var method;
-    var url
+    var url;
     if (id) {
       method = axios.put;
       url = `http://127.0.0.1:5000/api/v1/trends/${id}`
+      data.id = id;
     } else {
       method = axios.post;
       url = "http://127.0.0.1:5000/api/v1/trends"
-      data['id'] = id;
     }
-    method(url, {
-      title: title,
-      description: description,
-      keywords: [keywords],
-      urls: urls,
-      scrape_interval: scrape_interval,
-      summary: "Overwiew is being generated.",
-      updated: new Date().toJSON(), // not used
-    })
+    console.log(data);
+    method(url, data)
       .then(function (response) {
-        console.log(response);
-        onSubmit();
+        console.log(response.data);
+        onSubmit(response.data);
       })
       .catch(function (error) {
         console.log(error);

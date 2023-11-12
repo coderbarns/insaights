@@ -11,7 +11,17 @@ const TrendsDashboard = () => {
   const [showTrendModal, setShowTrendModal] = useState(false); // State to control modal open/close
 
   const handleNewTrend = (newTrend) => {
-    setTrends([...trends, newTrend]);
+    const existingTrendIndex = trends.findIndex(t => t.id === newTrend.id)
+    if (existingTrendIndex !== -1) {
+      console.log('is update')
+      console.log(trends)
+      var newTrends = [...trends]
+      newTrends.splice(existingTrendIndex, 1, newTrend)
+      setTrends(newTrends)
+    } else {
+      console.log('is create')
+      setTrends([...trends, newTrend]);
+    }
     setModalData(initalModalData);
     setShowTrendModal(false);
   };
