@@ -7,20 +7,20 @@ response = requests.post(url, json={"source": "aarni", "texts": ["I like cooking
 # print(response.text)
 # print(response.json())
 
-# url = f"{base_url}/api/v1/documents/search/"
-# response = requests.post(url, json={"conversation_id": 1, "query": "How much does steel manufacturing rock?"})
-# print(response.text)
-# result = response.json()
-# print(result)
+url = f"{base_url}/api/v1/documents/search/"
+response = requests.post(url, json={"conversation_id": 1, "query": "How much does steel manufacturing rock?"})
+print(response.text)
+result = response.json()
+print(result)
 
-# document = result["documents"][0]
-# document_id = document["id"]
-# query_id = result["query"]["id"]
-# document["reliability"] = 0.7
-# document["impact"] = -0.5
-# url = f"{base_url}/api/v1/queries/{query_id}/documents/{document_id}/"
-# response = requests.put(url, json=document)
-# print(response.json())
+document = result["documents"][0]
+document_id = document["id"]
+query_id = result["query"]["id"]
+document["reliability"] = 0.7
+document["impact"] = -0.5
+url = f"{base_url}/api/v1/queries/{query_id}/documents/{document_id}/"
+response = requests.put(url, json=document)
+print(response.json())
 
 url = f"{base_url}/api/v1/queries/"
 response = requests.get(url)
@@ -54,9 +54,7 @@ response = requests.get(url)
 print(response.json())
 
 trend_id = trend["id"]
-
-trend_id = 1
-url = f"{base_url}/api/v1/trends/{trend_id}"
+url = f"{base_url}/api/v1/trends/{trend_id}/"
 response = requests.put(
     url,
     json={
@@ -65,7 +63,9 @@ response = requests.put(
         "description": "My description",
         "keywords": ["kw2"],
         "urls": None,
+        "summary": "My summary",
         "scrape_interval": "daily",
+        "updated": "2021-01-01T00:00:00.000000",
     },
 )
 print(response.json())
