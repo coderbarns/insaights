@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Dict
 
 from src import schemas
 from src import db as models
@@ -44,7 +44,7 @@ def get_documents(db: Session, ids: List[int]) -> List[models.Document]:
 
 
 def create_document_query_relationships(
-    db: Session, query_id: int, id_score_mapping: dict[int, float]
+    db: Session, query_id: int, id_score_mapping: Dict[int, float]
 ):
     db_document_query_relationships = [
         models.DocumentQuery(
