@@ -37,7 +37,7 @@ def update_trend(db: Session, id: int, trend: schemas.Trend) -> models.Trend:
     db_trend.scrape_interval=trend.scrape_interval
     db_trend.summary=trend.summary
     db_trend.updated=datetime.now().isoformat()
-    db.flush()
+    db.commit()
     return db_trend
 
 

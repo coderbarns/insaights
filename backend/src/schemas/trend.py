@@ -10,7 +10,7 @@ class BaseTrend(BaseModel):
     urls: Optional[List[str]]
     scrape_interval: str
     summary: str
-    updated: str
+    updated: Optional[datetime]
 
 
 class CreateTrend(BaseTrend):

@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from openai import OpenAI
@@ -143,6 +144,8 @@ class Assistant:
     def _handle_fetch(self, query: str) -> str:
         if self._verbose:
             print(query)
+
+        logging.debug(f"assistant additional fetch: {query}")
 
         db = next(get_db())
         results = embeddings.search(query=query, limit=5)
