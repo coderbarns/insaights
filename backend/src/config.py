@@ -16,21 +16,15 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "scraip"
 
-    ES_SCHEME: str = "http"
-    ES_PORT: int = 9200
-    ES_HOST: str = "localhost"
-    ES_USER: str = ""
-    ES_PASSWORD: str = ""
-
     EMBEDDINGS_PATH: str = "embeddings"
+
+    OPENAI_KEY: str = ""
+    GOOGLE_KEY: str = ""
+    GOOGLE_CX: str = ""
+    YLE_APP_KEY: str = ""
 
     def get_pg_connection_uri(self):
         return f"{self.POSTGRES_SCHEME}://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-
-    def get_es_connection_uri(self):
-        if self.ES_USER == "" or self.ES_PASSWORD == "":
-            return f"{self.ES_SCHEME}://{self.ES_HOST}:{self.ES_PORT}"
-        return f"{self.ES_SCHEME}://{self.ES_USER}:{self.ES_PASSWORD}@{self.ES_HOST}:{self.ES_PORT}"
 
 
 settings = Settings()

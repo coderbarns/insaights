@@ -7,11 +7,9 @@ import json
 from src import db as models
 from src.config import settings
 from src.deps import get_db
-from src.schemas.document import DocumentSearchResult
+from src.schemas.search import DocumentSearchResult
 from src.services import embeddings
 from src.services.search import get_document_search_results
-
-KEY = settings.OPENAI_KEY
 
 MODEL = "gpt-3.5-turbo"
 TEMPERATURE = 0.1
@@ -59,7 +57,7 @@ TOOLS = [
 ]
 
 
-client = OpenAI(api_key=KEY)
+client = OpenAI(api_key=settings.OPENAI_KEY)
 
 
 class Assistant:

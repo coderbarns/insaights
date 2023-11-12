@@ -20,11 +20,9 @@ class Document(BaseDocument):
     id: int
     source_type: str
     link_title: Optional[str]
-    reliable: Optional[float]
-
-
-class DocumentSearchResult(Document):
-    score: float
+    reliability: Optional[float]
+    meta: Optional[dict]
+    full_text: Optional[str]
 
 
 class CreateDocumentsRequest(BaseModel):
@@ -41,20 +39,3 @@ class CreateDocumentsRequest(BaseModel):
 
 class CreateDocumentsResponse(BaseModel):
     message: str
-
-
-class DocumentSearchRequest(BaseModel):
-    conversation_id: str
-    query: str
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "texts": ["How much does steel manufacturing rock?"],
-            }
-        }
-
-
-class DocumentSearchResponse(BaseModel):
-    messages: List
-    documents: List[DocumentSearchResult]
