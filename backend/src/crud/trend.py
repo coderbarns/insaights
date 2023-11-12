@@ -1,3 +1,6 @@
+from datetime import datetime
+from typing import List
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -5,7 +8,7 @@ from src.schemas import trend as schemas
 from src import db as models
 
 
-def get_trends(db: Session) -> list[models.Trend]:
+def get_trends(db: Session) -> List[models.Trend]:
     return db.query(models.Trend).all()
 
 
@@ -16,6 +19,8 @@ def create_trend(db: Session, trend: schemas.Trend) -> models.Trend:
         keywords=trend.keywords,
         urls=trend.urls,
         scrape_interval=trend.scrape_interval,
+        summary=trend.summary,
+        updated=datetime.now().isoformat(),
     )
     db.add(db_trend)
     db.commit()
@@ -30,6 +35,8 @@ def update_trend(db: Session, id: int, trend: schemas.Trend) -> models.Trend:
     db_trend.keywords=trend.keywords
     db_trend.urls=trend.urls
     db_trend.scrape_interval=trend.scrape_interval
+    db_trend.summary=trend.summary
+    db_trend.updated=datetime.now().isoformat()
     db.flush()
     return db_trend
 

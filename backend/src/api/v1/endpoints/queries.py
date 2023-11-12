@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from typing import List
 
 from src.deps import get_db
 from src import schemas
@@ -12,7 +13,7 @@ router = APIRouter()
 @router.get("/")
 async def get_queries(
     db: Session = Depends(get_db),
-) -> list[schemas.query.Query]:
+) -> List[schemas.query.Query]:
     return crud.get_queries(db)
 
 

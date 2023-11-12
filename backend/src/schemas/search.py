@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import List, Optional
 
 from .document import Document
 from .query import Query
@@ -12,17 +12,19 @@ class DocumentSearchResult(Document):
 
 class DocumentSearchResponse(BaseModel):
     query: Query
-    summary: str
-    documents: list[DocumentSearchResult]
+    messages: List
+    documents: List[DocumentSearchResult]
 
 
 class DocumentSearchRequest(BaseModel):
+    conversation_id: int
     query: str
 
     class Config:
         schema_extra = {
             "example": {
-                "texts": ["How much does steel manufacturing rock?"],
+                "conversation_id": 1,
+                "query": ["How much does steel manufacturing rock?"],
             }
         }
 
@@ -38,4 +40,4 @@ class DocumentQueryUpdateRequest(DocumentSearchResult):
 
 
 class QueryResult(Query):
-    documents: list[DocumentSearchResult]
+    documents: List[DocumentSearchResult]

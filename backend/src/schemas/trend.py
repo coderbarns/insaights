@@ -1,13 +1,16 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime
 
 
 class BaseTrend(BaseModel):
     title: str
     description: str
-    keywords: list[str]
-    urls: Optional[list[str]]
+    keywords: List[str]
+    urls: Optional[List[str]]
     scrape_interval: str
+    summary: str
+    updated: str
 
 
 class CreateTrend(BaseTrend):
@@ -27,6 +30,8 @@ class CreateTrendRequest(CreateTrend):
                 "keywords": ["keyword1", "keyword2"],
                 "urls": ["google.com", "twitter.com"],
                 "scrape_interval": ["daily"],
+                "summary": "example summary",
+                "updated": datetime.now().isoformat()
             }
         }
 
@@ -43,5 +48,7 @@ class UpdateTrendRequest(BaseTrend):
                 "keywords": ["keyword1", "keyword2"],
                 "urls": ["google.com", "twitter.com"],
                 "scrape_interval": ["daily"],
+                "summary": "summary",
+                "updated": datetime.now().isoformat()
             }
         }

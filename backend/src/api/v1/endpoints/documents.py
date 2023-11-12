@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from src.conversation.assistant import get_assistant
 from src.crud.document import create_input_documents
 from src.crud.query import create_query
 from src.deps import get_db
@@ -32,10 +33,19 @@ async def search(
 ) -> schemas.search.DocumentSearchResponse:
     db_query = create_query(db, params.query)
     query = schemas.query.Query(id=db_query.id, text=db_query.text)
-    results = embeddings.search(query=params.query, limit=20)
-    document_search_results = get_document_search_results(db, query.id, results)
+
+    assistant = get_assistant(params.conversation_id)
+    if len(assistant.get_messages()) > 1:
+        # continue conversation
+        assistant.run(params.query)
+    else:
+        # start conversation
+        results = embeddings.search(query=params.query, limit=10)
+        document_search_results = get_document_search_results(db, query.id, results)
+        assistant.start(params.query, document_search_results)
+
     return schemas.search.DocumentSearchResponse(
         query=query,
-        summary="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        documents=document_search_results,
+        messages=assistant.get_messages(),
+        documents=assistant.get_documents(),
     )

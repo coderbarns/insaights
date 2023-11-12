@@ -1,3 +1,4 @@
+from typing import List, Tuple
 from sqlalchemy.orm import Session
 
 from src import crud
@@ -6,7 +7,7 @@ from src import db as models
 
 
 def get_document_search_results(
-    db: Session, query_id: int, results: list[tuple[int, float]]
+    db: Session, query_id: int, results: List[Tuple[int, float]]
 ):
     id_score_mapping = {index + 1: score for index, score in results}
     db_documents = crud.document.get_documents(db=db, ids=list(id_score_mapping))
@@ -24,6 +25,8 @@ def get_document_search_results(
                 source_type=db_document.source_type,
                 link_title=db_document.link_title,
                 reliability=db_document.reliability,
+                meta=db_document.meta,
+                full_text=db_document.full_text,
                 score=score,
                 impact=0,
             )
@@ -47,6 +50,8 @@ def update_document_query_relationship(
         source_type=db_document.source_type,
         link_title=db_document.link_title,
         reliability=db_document.reliability,
+        meta=db_document.meta,
+        full_text=db_document.full_text,
         score=params.score,
         impact=db_relationship.impact,
     )
@@ -65,6 +70,8 @@ def get_query(db: Session, query_id: int):
                 source_type=db_document.source_type,
                 link_title=db_document.link_title,
                 reliability=db_document.reliability,
+                meta=db_document.meta,
+                full_text=db_document.full_text,
                 score=db_relationship.score,
                 impact=db_relationship.impact,
             )

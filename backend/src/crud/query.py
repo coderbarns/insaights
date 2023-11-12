@@ -20,7 +20,9 @@ def get_query(db: Session, query_id: int) -> models.Query:
         db.query(models.Query)
         .filter(models.Query.id == query_id)
         .options(
-            selectinload(models.Query.document_relationships).selectinload(models.DocumentQuery.document)
+            selectinload(models.Query.document_relationships).selectinload(
+                models.DocumentQuery.document
+            )
         )
         .first()
     )

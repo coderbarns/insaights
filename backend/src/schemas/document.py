@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class BaseDocument(BaseModel):
@@ -21,11 +21,13 @@ class Document(BaseDocument):
     source_type: str
     link_title: Optional[str]
     reliability: Optional[float]
+    meta: Optional[dict]
+    full_text: Optional[str]
 
 
 class CreateDocumentsRequest(BaseModel):
     source: str
-    texts: list[str]
+    texts: List[str]
 
     class Config:
         schema_extra = {

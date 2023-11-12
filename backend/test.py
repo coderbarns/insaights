@@ -8,7 +8,8 @@ response = requests.post(url, json={"source": "aarni", "texts": ["I like cooking
 # print(response.json())
 
 url = f"{base_url}/api/v1/documents/search/"
-response = requests.post(url, json={"query": "How much does steel manufacturing rock?"})
+response = requests.post(url, json={"conversation_id": 1, "query": "How much does steel manufacturing rock?"})
+print(response.text)
 result = response.json()
 print(result)
 

@@ -1,3 +1,5 @@
+from typing import List
+
 import txtai
 
 import src.db as models
@@ -14,7 +16,7 @@ def get_embeddings():
     return _embeddings
 
 
-def upsert(db_documents: list[models.Document]):
+def upsert(db_documents: List[models.Document]):
     documents = [(db_document.id, db_document.text) for db_document in db_documents]
     try:
         _embeddings.upsert(documents)
