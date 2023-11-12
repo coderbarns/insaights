@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
-import TrendModal from "./TrendModal"; // Import your TrendModal
+import TrendModal, { initalModalData } from "./TrendModal"; // Import your TrendModal
 import TrendTile from "./TrendTile"; // Import your TrendTile
 
-import { Heading } from "@carbon/react";
+import { Heading, Button } from "@carbon/react";
 import axios from "axios";
 
 const TrendsDashboard = () => {
   const [trends, setTrends] = useState([]); // Array to hold trend data
+  const [modalData, setModalData] = useState(initalModalData);
+  const [showTrendModal, setShowTrendModal] = useState(false); // State to control modal open/close
 
   const handleNewTrend = (newTrend) => {
     setTrends([...trends, newTrend]);
+    setModalData(initalModalData);
+    setShowTrendModal(false);
   };
 
   const removeTrend = (id) => {
@@ -31,6 +35,17 @@ const TrendsDashboard = () => {
     fetchData();
   }, []);
 
+  const onClose = () => {
+    setShowTrendModal(false);
+    setModalData(initalModalData);
+  }
+
+  const onEdit = (trend) => () => {
+    setShowTrendModal(true);
+    console.log(trend)
+    setModalData(trend);
+  }
+
   return (
     <>
       <div
@@ -47,7 +62,11 @@ const TrendsDashboard = () => {
           <Heading>Trends</Heading>
         </div>
         <div>
-          <TrendModal onNewTrend={handleNewTrend} />
+          <Button onClick={() => setShowTrendModal(true)}>
+            Add Trend
+          </Button>
+
+          <TrendModal showTrendModal={showTrendModal} onSubmit={handleNewTrend} modalData={modalData} onClose={onClose} setModalData={setModalData} />
         </div>
       </div>
       <div
@@ -63,7 +82,7 @@ const TrendsDashboard = () => {
         }}
       >
         {trends.map((trend, index) => (
-          <TrendTile key={index} trendData={trend} removeTrend={removeTrend} />
+          <TrendTile key={index} trendData={trend} removeTrend={removeTrend} onEdit={onEdit(trend)} />
         ))}
       </div>
     </>
