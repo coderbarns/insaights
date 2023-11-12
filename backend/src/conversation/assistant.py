@@ -89,7 +89,7 @@ class Assistant:
             Title: {document.link_title}
             Metadata: {document.meta}
             Text:
-            {document.full_text}
+            {document.text}
             """
             self._write(prompt)
 

@@ -80,8 +80,10 @@ class GoogleEngine(SearchEngine):
                 description = item["snippet"]
                 meta = None
 
-                if "pagemap" in item:
+                try:
                     meta = item["pagemap"]["metatags"][0]
+                except KeyError:
+                    pass
 
                 result = SearchResult(url, title, description, meta)
                 results.append(result)

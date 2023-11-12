@@ -8,9 +8,6 @@ from src.deps import get_settings
 settings = get_settings()
 _embeddings = txtai.Embeddings()
 
-if _embeddings.exists():
-    _embeddings.load(settings.EMBEDDINGS_PATH)
-
 
 def get_embeddings():
     return _embeddings
@@ -27,3 +24,11 @@ def upsert(db_documents: List[models.Document]):
 
 def search(query: str, limit: int = 3):
     return _embeddings.search(query, limit=limit)
+
+
+def load():
+    return _embeddings.load(settings.EMBEDDINGS_PATH)
+
+
+if _embeddings.exists():
+    _embeddings.load(settings.EMBEDDINGS_PATH)

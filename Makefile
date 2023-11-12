@@ -32,7 +32,7 @@ latest_tag:
 	git describe --abbrev=0 --tags
 
 run_backend:
-	PYTHONPATH=backend uvicorn src.main:app --reload --port 5001
+	PYTHONPATH=backend uvicorn src.main:app --reload --port 5000
 
 create_tables:
 	PYTHONPATH=backend python backend/src/db.py

@@ -40,12 +40,13 @@ async def search(
         assistant.run(params.query)
     else:
         # start conversation
+        embeddings.load()
         results = embeddings.search(query=params.query, limit=10)
         document_search_results = get_document_search_results(db, results, query.id)
-        assistant.start(params.query, document_search_results)
+        # assistant.start(params.query, document_search_results)
 
     return schemas.search.DocumentSearchResponse(
         query=query,
-        messages=assistant.get_messages(),
-        documents=assistant.get_documents(),
+        messages=[],
+        documents=document_search_results,
     )

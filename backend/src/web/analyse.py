@@ -21,7 +21,8 @@ def fetch_trend(trend: models.Trend):
     db = next(get_db())
 
     documents = get_documents(trend)
-    create_documents(db, documents)
+    db_documents = create_documents(db, documents)
+    embeddings.upsert(db_documents)
 
     results = embeddings.search(query=trend.description, limit=10)
     documents_for_summary = get_document_search_results(db, results)
@@ -39,16 +40,17 @@ def get_documents(trend: models.Trend) -> List[models.Document]:
     results = []
 
     cutoff = SearchEngineCutoff.from_value(trend.scrape_interval)
+    keyword_str = " ".join(trend.keywords)
 
     if trend.urls:
         for url in trend.urls:
             engine = engines.get(url)
             engine.set_cutoff(cutoff)
-            results.extend(engine.search(" ".join(trend.keywords)))
+            results.extend(engine.search(keyword_str))
 
     # default search from all
     google = GoogleEngine(cutoff)
-    results.extend(google.search(trend.keywords))
+    results.extend(google.search(keyword_str))
 
     documents = []
     for result in results:
@@ -67,7 +69,7 @@ def get_documents(trend: models.Trend) -> List[models.Document]:
             document.source = "url"
             document.link_title = result.title
             document.meta = result.meta
-            document.full_text = summarizer.make(1000)
+            document.full_text = summarizer.make(50)
 
             documents.append(document)
         except Exception as ex:
