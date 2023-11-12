@@ -4,6 +4,7 @@ base_url = "http://127.0.0.1:5000"
 
 url = f"{base_url}/api/v1/documents/"
 response = requests.post(url, json={"source": "aarni", "texts": ["I like cooking.", "I like steel manufacturing", "Steel manufacturing rocks!"]})
+print(response.text)
 print(response.json())
 
 url = f"{base_url}/api/v1/documents/search/"

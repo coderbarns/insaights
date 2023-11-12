@@ -5,13 +5,14 @@ from src.schemas.document import DocumentSearchResult
 
 
 def get_document_search_results(db: Session, results: list[tuple[int, float]]):
-    ids = [id for id, _ in results]
+    ids = [index + 1 for index, _ in results]
     db_documents = get_documents(db=db, ids=ids)
     db_documents_mapping = {db_document.id: db_document for db_document in db_documents}
 
+    print(results)
     search_results = []
-    for id, score in results:
-        db_document = db_documents_mapping[id]
+    for index, score in results:
+        db_document = db_documents_mapping[index + 1]
         search_results.append(
             DocumentSearchResult(
                 id=db_document.id,
