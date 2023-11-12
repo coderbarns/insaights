@@ -12,6 +12,10 @@ const TrendsDashboard = () => {
     setTrends([...trends, newTrend]);
   };
 
+  const removeTrend = (id) => {
+    setTrends(trends.filter((trend) => trend.id !== id));
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -59,7 +63,7 @@ const TrendsDashboard = () => {
         }}
       >
         {trends.map((trend, index) => (
-          <TrendTile key={index} trendData={trend} />
+          <TrendTile key={index} trendData={trend} removeTrend={removeTrend} />
         ))}
       </div>
     </>
