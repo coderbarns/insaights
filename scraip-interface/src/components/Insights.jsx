@@ -114,7 +114,7 @@ const Insights = () => {
 
   const getSource = (link) => {
     const result = data.documents.filter((v) => v.source == link);
-    if (result.length == 1) {
+    if (result.length > 0) {
       return result[0];
     }
 
@@ -142,13 +142,14 @@ const Insights = () => {
             height: "75vh",
           }}
         >
-          <h4>{getSource(display)?.link_title}</h4>
+          <h3 style={{ marginBottom: 30 }}>{getSource(display)?.link_title}</h3>
           <iframe
             src={display}
             style={{ width: "100%", height: "100%" }}
           ></iframe>
-          <h5>Relevance</h5>
-          <Slider labelText="Slider label" max={100} min={0} />
+
+          <h5 style={{ marginTop: 50 }}>Relevance</h5>
+          <Slider max={100} min={0} width="100%" />
         </div>
       )}
 

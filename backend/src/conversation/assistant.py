@@ -152,9 +152,13 @@ class Assistant:
         documents = get_document_search_results(db, results)
 
         for document in documents:
+            duplicate = False
             for added in self._documents:
                 if document.source == added.source:
-                    continue  # skip duplicates
+                    duplicate = True
+
+            if duplicate:
+                continue
 
             self._documents.append(document)
 
