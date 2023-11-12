@@ -151,7 +151,12 @@ class Assistant:
         results = embeddings.search(query=query, limit=5)
         documents = get_document_search_results(db, results)
 
-        self._documents.extend(documents)
+        for document in documents:
+            for added in self._documents:
+                if document.source == added.source:
+                    continue  # skip duplicates
+
+            self._documents.append(document)
 
         response = ""
         for document in documents:

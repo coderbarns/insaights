@@ -58,15 +58,19 @@ def get_documents(trend: models.Trend) -> List[models.Document]:
 
         try:
             summarizer = UrlSummarizer(result.url)
-            short_summary = summarizer.make(3)
+            short_summary = summarizer.make(5)
 
             if not short_summary:
                 continue  # skip empty document
 
+            for document in documents:
+                if document.source == result.url:
+                    continue  # skip duplicates
+
             document = models.Document()
             document.text = result.description + " " + short_summary  # add snippet and summary for embeddings
             document.source_type = "url"
-            document.source = "url"
+            document.source = result.url
             document.link_title = result.title
             document.meta = result.meta
             document.full_text = summarizer.make(25)
