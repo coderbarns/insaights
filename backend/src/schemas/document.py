@@ -44,6 +44,7 @@ class CreateDocumentsResponse(BaseModel):
 
 
 class DocumentSearchRequest(BaseModel):
+    conversation_id: str
     query: str
 
     class Config:
@@ -55,5 +56,5 @@ class DocumentSearchRequest(BaseModel):
 
 
 class DocumentSearchResponse(BaseModel):
-    summary: str
+    messages: List
     documents: List[DocumentSearchResult]

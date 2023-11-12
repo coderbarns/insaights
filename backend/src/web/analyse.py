@@ -2,9 +2,12 @@ from typing import List
 
 import logging
 
+from src.conversation.assistant import Assistant
 from src.crud.document import create_documents
 from src.crud.trend import update_trend, create_trend
 from src.deps import get_db
+from src.services import embeddings
+from src.services.search import get_document_search_results
 from src.web.summarizer import UrlSummarizer
 from src.web.engines import engines
 from src.web.engines.google import GoogleEngine
@@ -20,7 +23,13 @@ def fetch_trend(trend: models.Trend):
     documents = get_documents(trend)
     create_documents(db, documents)
 
-    trend.summary = "summary"
+    results = embeddings.search(query=trend.description, limit=10)
+    documents_for_summary = get_document_search_results(db, results)
+
+    assistant = Assistant()
+    conversation = assistant.start(trend.description, documents_for_summary)
+    trend.summary = conversation[-1].content
+
     update_trend(db, trend.id, trend)
 
 

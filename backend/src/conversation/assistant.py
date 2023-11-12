@@ -3,7 +3,12 @@ from typing import List
 from openai import OpenAI
 import json
 
+from src import db as models
 from src.config import settings
+from src.deps import get_db
+from src.schemas.document import DocumentSearchResult
+from src.services import embeddings
+from src.services.search import get_document_search_results
 
 KEY = settings.OPENAI_KEY
 
@@ -16,32 +21,37 @@ TOOLS = [
     {
         "type": "function",
         "function": {
-            "name": "fetch_information",
-            "description": "Fetch additional information for summarizing",
+            "name": "fetch_documents",
+            "description": "Fetch additional documents for summarizing",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "keywords": {
-                        "type": "array",
-                        "description": "list of keywords for searching the information",
-                        "items": {
-                            "type": "string",
-                        }
-                    },
-                    "queries": {
-                        "type": "array",
-                        "description": "list queries in the form of sentences for searching the information",
-                        "items": {
-                            "type": "string",
-                        }
-                    },
-                    "source": {
+                    # "keywords": {
+                    #     "type": "array",
+                    #     "description": "list of keywords for searching the information",
+                    #     "items": {
+                    #         "type": "string",
+                    #     }
+                    # },
+                    # "queries": {
+                    #     "type": "array",
+                    #     "description": "list queries in the form of sentences for searching the information",
+                    #     "items": {
+                    #         "type": "string",
+                    #     }
+                    # },
+                    # "source": {
+                    #     "type": "string",
+                    #     "enum": ["news", "patents", "journals", "social media", "internet"],
+                    #     "description": "the main type of source for the information"
+                    # }
+                    "query": {
                         "type": "string",
-                        "enum": ["news", "patents", "journals", "social media", "internet"],
-                        "description": "the main type of source for the information"
-                    }
+                        "description": "query for searching additional documents",
+                    },
                 },
-                "required": ["keywords", "queries", "source"]
+                # "required": ["keywords", "queries", "source"]
+                "required": ["query"]
             }
         },
     }
@@ -56,18 +66,32 @@ class Assistant:
         self._messages = messages if messages else [
             {"role": "system", "content": SEED}
         ]
+        self._documents = []
         self._verbose = verbose
 
-    def start(self, query: str, texts: List[str]) -> List:
+    def get_messages(self) -> List:
+        return self._messages
+
+    def get_documents(self) -> List[DocumentSearchResult]:
+        return self._documents
+
+    def start(self, query: str, documents: List[DocumentSearchResult]) -> List:
         """
         Start conversation with initial prompt for summarizing and the data
         """
 
-        prompt = f"Summarize answer in two paragraphs to the following question from the information provided below: {query}"
+        prompt = f"Summarize answer in two paragraphs to the following question from the documents provided below: {query}"
         self._write(prompt)
 
-        for text in texts:
-            prompt = f"Text by TODO published at TODO: {text}"
+        self._documents.extend(documents)
+
+        for document in documents:
+            prompt = f"""
+            Title: {document.link_title}
+            Metadata: {document.meta}
+            Text:
+            {document.full_text}
+            """
             self._write(prompt)
 
         return self._submit()
@@ -99,9 +123,10 @@ class Assistant:
                 function_args = json.loads(tool_call.function.arguments)  # TODO: json may be incorrect -> handle errors
 
                 function_response = self._handle_fetch(
-                    keywords=function_args.get("keywords"),
-                    queries=function_args.get("queries"),
-                    source=function_args.get("source"),
+                    # keywords=function_args.get("keywords"),
+                    # queries=function_args.get("queries"),
+                    # source=function_args.get("source"),
+                    query=function_args.get("query"),
                 )
 
                 self._messages.append(
@@ -117,13 +142,42 @@ class Assistant:
 
         return self._messages
 
-    def _handle_fetch(self, keywords: List[str], queries: List[str], source: str) -> str:
+    def _handle_fetch(self, query: str) -> str:
         if self._verbose:
-            print(keywords)
-            print(queries)
-            print(source)
+            print(query)
 
-        return ""
+        db = next(get_db())
+        results = embeddings.search(query=query, limit=5)
+        documents = get_document_search_results(db, results)
+
+        self._documents.extend(documents)
+
+        response = ""
+        for document in documents:
+            content = f"""
+            Title: {document.link_title}
+            Metadata: {document.meta}
+            Text:
+            {document.full_text}
+
+            """
+            response += content
+
+        return response
+
+
+# assistant store
+assistants = {}
+
+
+def get_assistant(id_: str) -> Assistant:
+    if id_ in assistants:
+        return assistants[id_]
+
+    assistant = Assistant()
+    assistants[id_] = assistant
+
+    return assistant
 
 
 def test():
