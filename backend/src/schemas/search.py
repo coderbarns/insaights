@@ -11,7 +11,7 @@ class DocumentSearchResult(Document):
 
 
 class DocumentSearchResponse(BaseModel):
-    query: Query
+    # query: Query
     messages: List
     documents: List
 
