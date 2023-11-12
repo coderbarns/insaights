@@ -7,6 +7,8 @@ import {
   ProgressIndicator,
   ProgressStep,
   ModalFooter,
+  Select,
+  SelectItem,
 } from "@carbon/react";
 
 import { useState, useRef } from "react";
@@ -51,6 +53,8 @@ function TrendModal({ onNewTrend }) {
     setDescription("");
     setCurrentWebsite("");
     setWebsites([]);
+
+    handleSetOpen();
   };
 
   const handleSetOpen = (newOpen) => {
@@ -73,10 +77,17 @@ function TrendModal({ onNewTrend }) {
       >
         <ModalBody hasForm>
           <ProgressIndicator
+            spaceEqually
             style={{
+              marginTop: "1rem",
               marginBottom: "4rem",
             }}
           >
+            <ProgressStep
+              current={websites.length > 0}
+              label="Title"
+              secondaryLabel="Name your module"
+            />
             <ProgressStep
               complete={browserQuery !== ""}
               label="Add query"
@@ -86,7 +97,7 @@ function TrendModal({ onNewTrend }) {
               complete={description !== ""}
               current={browserQuery !== "" && description === ""}
               label="Add description"
-              secondaryLabel="Describe your search"
+              secondaryLabel="Describe your wanted results"
             />
             <ProgressStep
               complete={websites.length > 0}
@@ -110,8 +121,19 @@ function TrendModal({ onNewTrend }) {
           <TextInput
             data-modal-primary-focus
             id="text-input-1"
-            labelText="Browser query"
-            placeholder="Environmental catastrophies"
+            labelText="Title"
+            placeholder="Name for your data module"
+            value={browserQuery}
+            onChange={(e) => setBrowserQuery(e.target.value)}
+            style={{
+              marginBottom: "1rem",
+            }}
+          />
+          <TextInput
+            data-modal-primary-focus
+            id="text-input-1"
+            labelText="Search query"
+            placeholder="e.g. Environmental catastrophies in Europe"
             value={browserQuery}
             onChange={(e) => setBrowserQuery(e.target.value)}
             style={{
@@ -122,13 +144,24 @@ function TrendModal({ onNewTrend }) {
             data-modal-primary-focus
             id="text-input-1"
             labelText="Description"
-            placeholder="e.g. environmental catastrophies that are affecting energy production and pricing."
+            placeholder="Describe your wanted results (e.g. how are environmental catastrophies affecting energy production and pricing.)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             style={{
               marginBottom: "1rem",
             }}
           />
+          <Select
+            id={`select-1`}
+            labelText="Frequency of the search"
+            style={{
+              marginBottom: "1rem",
+            }}
+          >
+            <SelectItem value={1} text="Once a day" />
+            <SelectItem value={2} text="Once a week" />
+            <SelectItem value={3} text="Once a month" />
+          </Select>
           <TextInput
             data-modal-primary-focus
             value={currentWebsite}

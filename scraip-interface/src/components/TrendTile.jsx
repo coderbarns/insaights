@@ -9,6 +9,8 @@ import {
   Link,
 } from "@carbon/react";
 
+import TrendModal from "./TrendModal";
+
 const TrendTile = ({ trendData }) => {
   const { browserQuery, description, websites } = trendData;
 
@@ -65,7 +67,7 @@ const TrendTile = ({ trendData }) => {
               justifyContent: "space-between",
             }}
           >
-            <Button>Edit</Button>
+            <Button onClick={TrendModal}>Edit</Button>
             <Button style={{ backgroundColor: "#D3D3D3", color: "black" }}>
               Delete
             </Button>
