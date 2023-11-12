@@ -11,7 +11,7 @@ from src.schemas.search import DocumentSearchResult
 from src.services import embeddings
 from src.services.search import get_document_search_results
 
-MODEL = "gpt-3.5-turbo"
+MODEL = "gpt-4-1106-preview"
 TEMPERATURE = 0.1
 SEED = "You are a trustworthy assistant for summarizing real time insights to help drive business decisions for a global leader in stainless steel manufacturing."
 
@@ -89,7 +89,7 @@ class Assistant:
             Title: {document.link_title}
             Metadata: {document.meta}
             Text:
-            {document.text}
+            {document.full_text}
             """
             self._write(prompt)
 

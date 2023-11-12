@@ -56,17 +56,18 @@ function TrendModal({ onNewTrend }) {
       })
       .then(function (response) {
         console.log(response);
+        onNewTrend(response.data);
+
+        setBrowserQuery("");
+        setDescription("");
+        setCurrentWebsite("");
+        setWebsites([]);
+
+        handleSetOpen();
       })
       .catch(function (error) {
         console.log(error);
       });
-
-    setBrowserQuery("");
-    setDescription("");
-    setCurrentWebsite("");
-    setWebsites([]);
-
-    handleSetOpen();
   };
 
   const handleSetOpen = (newOpen) => {
