@@ -7,11 +7,13 @@ from src import db as models
 
 
 def get_document_search_results(
-    db: Session, query_id: int, results: List[Tuple[int, float]]
+    db: Session, results: List[Tuple[int, float]], query_id: int = None
 ):
     id_score_mapping = {index + 1: score for index, score in results}
     db_documents = crud.document.get_documents(db=db, ids=list(id_score_mapping))
-    crud.document.create_document_query_relationships(db, query_id, id_score_mapping)
+
+    if query_id:
+        crud.document.create_document_query_relationships(db, query_id, id_score_mapping)
 
     db_documents_mapping = {db_document.id: db_document for db_document in db_documents}
     search_results = []
@@ -38,10 +40,7 @@ def get_document_search_results(
 def update_document_query_relationship(
     db: Session, query_id: int, params: DocumentSearchResult
 ):
-    crud.document.delete_document_query_relationship(db, params.id, query_id)
-    db_relationship = crud.document.create_document_query_relationship(
-        db, query_id, params
-    )
+    crud.document.update_document_query_relationship(db, query_id, params)
     db_document = crud.document.update_document_reliability(db, params)
     return DocumentSearchResult(
         id=db_document.id,
@@ -53,7 +52,7 @@ def update_document_query_relationship(
         meta=db_document.meta,
         full_text=db_document.full_text,
         score=params.score,
-        impact=db_relationship.impact,
+        impact=params.impact,
     )
 
 
@@ -61,6 +60,7 @@ def get_query(db: Session, query_id: int):
     db_query: models.Query = crud.query.get_query(db, query_id)
     documents = []
     for db_relationship in db_query.document_relationships:
+        print(db_relationship.score)
         db_document: models.Document = db_relationship.document
         documents.append(
             DocumentSearchResult(

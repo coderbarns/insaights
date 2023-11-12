@@ -59,23 +59,17 @@ def create_document_query_relationships(
     db.commit()
 
 
-def create_document_query_relationship(
+def update_document_query_relationship(
     db: Session, query_id: int, params: schemas.search.DocumentSearchResult
 ):
-    db_document_query_relationship = models.DocumentQuery(
-        document_id=params.id,
-        query_id=query_id,
-        impact=params.impact,
-    )
-    db.add(db_document_query_relationship)
-    db.commit()
-    db.refresh(db_document_query_relationship)
-    return db_document_query_relationship
-
-
-def delete_document_query_relationship(db: Session, document_id: int, query_id: int):
     db.query(models.DocumentQuery).filter(
         models.DocumentQuery.query_id == query_id,
-        models.DocumentQuery.document_id == document_id,
-    ).delete()
+        models.DocumentQuery.document_id == params.id,
+    ).update(
+        {
+            models.DocumentQuery.impact: params.impact,
+            models.DocumentQuery.score: params.score,
+        }
+    )
     db.commit()
+    return params

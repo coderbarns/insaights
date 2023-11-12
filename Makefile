@@ -32,7 +32,10 @@ latest_tag:
 	git describe --abbrev=0 --tags
 
 run_backend:
-	PYTHONPATH=backend uvicorn src.main:app --reload --port 5000
+	PYTHONPATH=backend uvicorn src.main:app --reload --port 5001
 
 create_tables:
 	PYTHONPATH=backend python backend/src/db.py
+
+init_nltk:
+	PYTHONPATH=backend python backend/src/web/init_nltk.py

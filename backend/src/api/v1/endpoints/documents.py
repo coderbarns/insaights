@@ -41,7 +41,7 @@ async def search(
     else:
         # start conversation
         results = embeddings.search(query=params.query, limit=10)
-        document_search_results = get_document_search_results(db, query.id, results)
+        document_search_results = get_document_search_results(db, results, query.id)
         assistant.start(params.query, document_search_results)
 
     return schemas.search.DocumentSearchResponse(
