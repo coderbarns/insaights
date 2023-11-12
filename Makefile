@@ -16,14 +16,17 @@ pylint:
 flake8:
 	flake8 backend
 
+docker_up:
+	docker-compose up -d
+
 docker_dbs_up:
-	docker-compose up -d postgres rabbitmq elasticsearch kibana
+	docker-compose up -d postgres
 
-docker_dbs_down:
-	docker-compose down postgres rabbitmq elasticsearch kibana
+docker_down:
+	docker-compose down
 
-docker_dbs_down_volumes:
-	docker-compose down postgres rabbitmq elasticsearch kibana --volumes
+docker_down_volumes:
+	docker-compose down --volumes
 
 latest_tag:
 	git describe --abbrev=0 --tags

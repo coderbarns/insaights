@@ -55,4 +55,5 @@ class DocumentSearchRequest(BaseModel):
 
 
 class DocumentSearchResponse(BaseModel):
-    results: List[DocumentSearchResult]
+    summary: str
+    documents: List[DocumentSearchResult]
