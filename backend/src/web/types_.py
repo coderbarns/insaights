@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 from typing import NamedTuple, List, Optional
 
@@ -7,12 +9,23 @@ class SearchResult(NamedTuple):
     title: str
     description: str
     meta: Optional[dict]
+    # TODO: add assets/images
 
 
 class SearchEngineCutoff(Enum):
-    DAY = 1
-    WEEK = 2
-    MONTH = 3
+    """
+    Trend.scrape_interval values
+    """
+    DAY = "daily"
+    WEEK = "weekly"
+    MONTH = "monthly"
+
+    @staticmethod
+    def from_value(value: str) -> Optional[SearchEngineCutoff]:
+        for cutoff in SearchEngineCutoff:
+            if cutoff.value.lower() == value.lower():
+                return cutoff
+        return None
 
 
 class SearchEngine:

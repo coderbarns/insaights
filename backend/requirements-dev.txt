@@ -46,3 +46,5 @@ uvicorn==0.24.0.post1
 selenium
 bs4
 openai
+sumy
+nltk

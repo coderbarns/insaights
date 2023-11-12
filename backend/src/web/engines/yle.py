@@ -3,9 +3,9 @@ from typing import List
 import requests
 import json
 
-from src.scraper.types_ import SearchEngine, SearchResult
+from src.web.types_ import SearchEngine, SearchResult
 from src.config import settings
-from src.scraper.utils import get_dict_value
+from src.web.utils import get_dict_value
 
 URL = "https://yle-fi-search.api.yle.fi/v1/search"
 APP_ID = "hakuylefi_v2_prod"

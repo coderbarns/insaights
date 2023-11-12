@@ -1,6 +1,6 @@
-from src.scraper.engines.google import GoogleEngine
-from src.scraper.types_ import SearchEngine
-from src.scraper.engines.yle import YleEngine
+from src.web.engines.google import GoogleEngine
+from src.web.types_ import SearchEngine
+from src.web.engines.yle import YleEngine
 
 # define custom search engines for sites here
 engines = {
