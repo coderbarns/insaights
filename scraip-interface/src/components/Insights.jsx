@@ -49,16 +49,14 @@ const Insights = () => {
       <div style={{ display: "flex", maxWidth: "1260px", margin: "auto" }}>
         <Heading>Insights</Heading>
       </div>
-
       <div
-        ref={containerRef}
         style={{
           display: "flex",
           flexDirection: "column",
           overflowY: "auto",
           maxWidth: "800px",
           margin: "auto",
-          height: "80vh",
+          height: "75vh",
         }}
       >
         {queries.length === 0 && (
@@ -67,7 +65,7 @@ const Insights = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "80vh",
+              height: "75vh",
             }}
           >
             <svg
@@ -82,12 +80,14 @@ const Insights = () => {
               <path d="m4 10 .4-1.6 1.6-.4-1.6-.4-.4-1.6-.4 1.6-1.6.4 1.6.4z" />
               <path d="m16.5 6c-1.07 0-1.84 1.12-1.35 2.14l-3.01 3.01c-.52-.25-.99-.14-1.29 0l-1.01-1.01c.1-.19.16-.41.16-.64 0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5c0 .23.06.45.15.64l-3.01 3.01c-.19-.09-.41-.15-.64-.15-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5c0-.23-.06-.45-.15-.64l3.01-3.01c.52.25.99.14 1.29 0l1.01 1.01c-.1.19-.16.41-.16.64 0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5c0-.23-.06-.45-.15-.64l3.01-3.01c1.03.5 2.14-.29 2.14-1.35 0-.83-.67-1.5-1.5-1.5z" />
             </svg>
-            <h3 style={{ paddingLeft: "20px" }}>Search trends</h3>
+            <h3 style={{ paddingLeft: "20px" }}>
+              Discover patterns from your data modules
+            </h3>
           </div>
         )}
 
         {queries.length > 0 && (
-          <div style={{ width: "100%" }}>
+          <div ref={containerRef} style={{ width: "100%" }}>
             {queries.map((query, index) => (
               <div key={index}>
                 <h4 style={{ fontWeight: "bold", margin: "20px" }}>{query}</h4>
@@ -117,7 +117,6 @@ const Insights = () => {
           </div>
         )}
       </div>
-
       <div
         style={{
           display: "flex",
@@ -142,6 +141,16 @@ const Insights = () => {
           <Button onClick={addQuery}>Find Insights</Button>
         </div>
       </div>
+      <p
+        style={{
+          margin: "auto",
+          textAlign: "center",
+          padding: "4px",
+          fontSize: "12px",
+        }}
+      >
+        Search for insights based on your trend modules.
+      </p>
     </div>
   );
 };

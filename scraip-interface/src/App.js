@@ -30,14 +30,18 @@ function App() {
           padding: "20px",
         }}
       >
-        <div style={{display: 'flex', marginBottom: '40px'}} aria-label="Header for Our Skeleton App">
-          <p style={{fontWeight: 'bold', marginRight: '25px'}}>SCRAIP </p>
-          <HeaderName href="#" prefix="" onClick={() => setActiveHeader('Trends')}>
-            Trends
-          </HeaderName>
-          <HeaderName href="#" prefix="" onClick={() => setActiveHeader('Insights')}>
-            Insights
-          </HeaderName>
+        <div style={{display: 'flex', marginBottom: '40px', alignItems: "flex-end"}} aria-label="Header for Our Skeleton App">
+          <h4 style={{fontWeight: 'bold', marginRight: '25px'}}>Insaights |</h4>
+          <div>
+            <HeaderName href="#" prefix="" onClick={() => setActiveHeader('Trends')}>
+              Trends
+            </HeaderName>
+          </div>
+          <div>
+            <HeaderName href="#" prefix="" onClick={() => setActiveHeader('Insights')}>
+              Insights
+            </HeaderName>
+          </div>
         </div>
         <div style={{width: '100%'}}>
           {renderComponent()}

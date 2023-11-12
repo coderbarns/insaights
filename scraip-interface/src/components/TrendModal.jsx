@@ -53,6 +53,8 @@ function TrendModal({ onNewTrend }) {
     setDescription("");
     setCurrentWebsite("");
     setWebsites([]);
+
+    handleSetOpen();
   };
 
   const handleSetOpen = (newOpen) => {
@@ -75,7 +77,9 @@ function TrendModal({ onNewTrend }) {
       >
         <ModalBody hasForm>
           <ProgressIndicator
+            spaceEqually
             style={{
+              marginTop: "1rem",
               marginBottom: "4rem",
             }}
           >
