@@ -15,7 +15,7 @@ const TrendsDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/v1/trends");
+        const response = await axios.get("http://127.0.0.1:5000/api/v1/trends/");
         if (response.data) {
           setTrends(response.data);
         }

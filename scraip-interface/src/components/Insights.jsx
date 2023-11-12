@@ -27,7 +27,7 @@ const Insights = () => {
       setLoading(true);
 
       axios
-        .post("http://localhost:5000/api/v1/documents/search/", {
+        .post("http://127.0.0.1:5000/api/v1/documents/search/", {
           conversation_id: conversationId,
           query: currentInput,
         })
