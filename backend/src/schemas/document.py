@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class BaseDocument(BaseModel):
@@ -29,7 +29,7 @@ class DocumentSearchResult(Document):
 
 class CreateDocumentsRequest(BaseModel):
     source: str
-    texts: list[str]
+    texts: List[str]
 
     class Config:
         schema_extra = {
@@ -55,4 +55,4 @@ class DocumentSearchRequest(BaseModel):
 
 
 class DocumentSearchResponse(BaseModel):
-    results: list[DocumentSearchResult]
+    results: List[DocumentSearchResult]

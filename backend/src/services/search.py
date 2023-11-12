@@ -1,10 +1,12 @@
+from typing import List, Tuple
+
 from sqlalchemy.orm import Session
 
 from src.crud.document import get_documents
 from src.schemas.document import DocumentSearchResult
 
 
-def get_document_search_results(db: Session, results: list[tuple[int, float]]):
+def get_document_search_results(db: Session, results: List[Tuple[int, float]]):
     ids = [id for id, _ in results]
     db_documents = get_documents(db=db, ids=ids)
     db_documents_mapping = {db_document.id: db_document for db_document in db_documents}

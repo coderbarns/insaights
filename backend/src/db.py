@@ -5,6 +5,7 @@ from sqlalchemy import (
     String,
     Float,
     JSON,
+    DateTime,
     create_engine,
 )
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -73,6 +74,8 @@ class Trend(Base):
     keywords = Column(ARRAY(String))
     urls = Column(ARRAY(String), nullable=True)
     scrape_interval = Column(String)
+    summary = Column(String)
+    updated = Column(DateTime)
 
 
 class Query(Base):
