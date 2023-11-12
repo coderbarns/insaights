@@ -78,22 +78,18 @@ const Insights = () => {
       value: "assistant",
       label: "Sources",
       renderIcon: Folder,
-      children: [
-        {
-          id: "3-1",
-          value: "yle.fi",
-          label: "Business process automation",
-          renderIcon: Document,
-        },
-        {
-          id: "3-2",
-          value: "cnn.com",
-          label: "Business process mapping",
-          renderIcon: Document,
-        },
-      ],
+      children: [],
     },
   ];
+
+  data.documents.forEach((v) => {
+    nodes[1].children.push({
+      id: v.source,
+      value: v.source,
+      label: v.link_title,
+      renderIcon: Document,
+    });
+  });
 
   const renderTree = (nodes) => {
     return nodes.map((node) => (

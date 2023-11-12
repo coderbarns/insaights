@@ -58,7 +58,7 @@ def get_documents(trend: models.Trend) -> List[models.Document]:
 
         try:
             summarizer = UrlSummarizer(result.url)
-            short_summary = summarizer.make()
+            short_summary = summarizer.make(3)
 
             if not short_summary:
                 continue  # skip empty document
@@ -69,7 +69,7 @@ def get_documents(trend: models.Trend) -> List[models.Document]:
             document.source = "url"
             document.link_title = result.title
             document.meta = result.meta
-            document.full_text = summarizer.make(50)
+            document.full_text = summarizer.make(25)
 
             documents.append(document)
         except Exception as ex:

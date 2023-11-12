@@ -11,13 +11,13 @@ class DocumentSearchResult(Document):
 
 
 class DocumentSearchResponse(BaseModel):
-    query: Query
+    # query: Query
     messages: List
-    documents: List[DocumentSearchResult]
+    documents: List
 
 
 class DocumentSearchRequest(BaseModel):
-    conversation_id: int
+    conversation_id: str
     query: str
 
     class Config:

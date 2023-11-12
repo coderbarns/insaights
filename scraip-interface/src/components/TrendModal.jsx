@@ -68,11 +68,11 @@ function TrendModal({ showTrendModal, onSubmit, onClose, modalData, setModalData
     })
       .then(function (response) {
         console.log(response);
+        onSubmit();
       })
       .catch(function (error) {
         console.log(error);
       });
-    onSubmit();
   };
 
   return (
