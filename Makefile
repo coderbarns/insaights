@@ -20,7 +20,7 @@ docker_up:
 	docker-compose up -d
 
 docker_dbs_up:
-	docker-compose up -d postgres rabbitmq elasticsearch kibana
+	docker-compose up -d
 
 docker_down:
 	docker-compose down
